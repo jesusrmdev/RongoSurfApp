@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SurfNatureMurcia - Escuela de Surf",
   description:
-    "Reserva tus clases de surf en la Manga del Mar Menor. Clases para todos los niveles, material incluido.",
+    "Reserva tus clases de surf en Calnegre. Clases para todos los niveles, material incluido.",
   icons: {
     icon: "/logo.png",
     apple: "/logo.png",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "SurfNatureMurcia - Escuela de Surf",
     description:
-      "Reserva tus clases de surf en la Manga del Mar Menor. Clases para todos los niveles, material incluido.",
+    "Reserva tus clases de surf en Calnegre. Clases para todos los niveles, material incluido.",
     url: "https://surf-nature-murcia.vercel.app",
     siteName: "SurfNatureMurcia",
     images: [
