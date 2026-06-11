@@ -5,7 +5,6 @@ import { decrypt } from "@/lib/auth";
 const protectedRoutes = [
   "/mis-reservas",
   "/admin",
-  "/clases",
 ];
 const adminRoutes = ["/admin"];
 const publicRoutes = ["/login", "/register", "/"];

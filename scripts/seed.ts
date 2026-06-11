@@ -1,97 +1,163 @@
-import Database from "better-sqlite3";
+import "dotenv/config";
+import { PrismaClient } from "@prisma/client";
+import { PrismaNeon } from "@prisma/adapter-neon";
+import { neonConfig } from "@neondatabase/serverless";
+import ws from "ws";
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
 
-const db = new Database("dev.db");
+neonConfig.webSocketConstructor = ws;
+const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL! });
+const prisma = new PrismaClient({ adapter });
 
-db.pragma("journal_mode = WAL");
+async function main() {
+  const adminPassword = bcrypt.hashSync("admin123", 10);
+  const userPassword = bcrypt.hashSync("surf123", 10);
 
-const adminId = crypto.randomUUID();
-const userId = crypto.randomUUID();
+  await prisma.user.upsert({
+    where: { email: "admin@surfnaturemurcia.com" },
+    update: {},
+    create: {
+      name: "Admin SurfNature",
+      email: "admin@surfnaturemurcia.com",
+      password: adminPassword,
+      role: "ADMIN",
+    },
+  });
 
-const adminPassword = bcrypt.hashSync("admin123", 10);
-const userPassword = bcrypt.hashSync("surf123", 10);
+  await prisma.user.upsert({
+    where: { email: "surfer@test.com" },
+    update: {},
+    create: {
+      name: "Surfer Test",
+      email: "surfer@test.com",
+      password: userPassword,
+      role: "USER",
+    },
+  });
 
-db.prepare(
-  `INSERT OR IGNORE INTO "User" (id, name, email, password, role) VALUES (?, ?, ?, ?, ?)`
-).run(adminId, "Admin SurfNature", "admin@surfnaturemurcia.com", adminPassword, "ADMIN");
+  console.log("Usuarios creados");
 
-db.prepare(
-  `INSERT OR IGNORE INTO "User" (id, name, email, password, role) VALUES (?, ?, ?, ?, ?)`
-).run(userId, "Surfer Test", "surfer@test.com", userPassword, "USER");
+  const tomorrow = new Date(Date.now() + 86400000);
+  const dayAfter = new Date(Date.now() + 172800000);
+  const in3Days = new Date(Date.now() + 259200000);
+  const in5Days = new Date(Date.now() + 432000000);
+  const in7Days = new Date(Date.now() + 604800000);
+  const in10Days = new Date(Date.now() + 864000000);
 
-console.log("Usuarios creados");
+  type SessionData = { date: Date; time: string };
 
-const tomorrow = new Date(Date.now() + 86400000);
-const dayAfter = new Date(Date.now() + 172800000);
-const in3Days = new Date(Date.now() + 259200000);
-const in5Days = new Date(Date.now() + 432000000);
-
-const insertClass = db.prepare(
-  `INSERT INTO "Class" (id, title, description, type, capacity, price, duration) VALUES (?, ?, ?, ?, ?, ?, ?)`
-);
-
-const insertSession = db.prepare(
-  `INSERT INTO "Session" (id, "classId", date, time) VALUES (?, ?, ?, ?)`
-);
-
-function seedClass(
-  title: string,
-  description: string,
-  type: string,
-  capacity: number,
-  price: number,
-  duration: number,
-  sessions: { date: Date; time: string }[]
-) {
-  const classId = crypto.randomUUID();
-  insertClass.run(classId, title, description, type, capacity, price, duration);
-  for (const session of sessions) {
-    insertSession.run(crypto.randomUUID(), classId, session.date.toISOString(), session.time);
+  async function seedClass(
+    title: string,
+    description: string,
+    type: string,
+    capacity: number,
+    price: number,
+    duration: number,
+    sessions: SessionData[]
+  ) {
+    const existing = await prisma.class.findFirst({ where: { title } });
+    if (existing) {
+      console.log(`Ya existe: ${title}`);
+      return;
+    }
+    await prisma.class.create({
+      data: {
+        title,
+        description,
+        type,
+        capacity,
+        price,
+        duration,
+        sessions: {
+          create: sessions.map((s) => ({
+            date: s.date,
+            time: s.time,
+          })),
+        },
+      },
+    });
+    console.log(`Creada: ${title}`);
   }
-  console.log(`Creada: ${title}`);
+
+  await seedClass(
+    "Iniciación",
+    "Empieza a surfear desde cero de forma sencilla, segura y divertida en Calnegre. Te acompañamos paso a paso hasta que consigas ponerte de pie y coger tus primeras olas con confianza.",
+    "GROUP", 4, 40, 90,
+    [
+      { date: tomorrow, time: "09:00" },
+      { date: tomorrow, time: "11:30" },
+      { date: dayAfter, time: "09:00" },
+      { date: in3Days, time: "10:00" },
+    ]
+  );
+
+  await seedClass(
+    "Perfeccionamiento",
+    "Mejora tu técnica y gana confianza en el agua si ya has surfado antes. Te ayudamos a coger mejores olas, corregir postura y avanzar de forma segura en Calnegre.",
+    "GROUP", 4, 40, 90,
+    [
+      { date: tomorrow, time: "10:00" },
+      { date: dayAfter, time: "10:00" },
+      { date: dayAfter, time: "16:00" },
+    ]
+  );
+
+  await seedClass(
+    "Surf Camp",
+    "Vive una experiencia completa de surf durante un fin de semana en Calnegre. Incluye alojamiento, clases de surf, surfskate y yoga para mejorar tu técnica, desconectar y conectar con el mar.",
+    "GROUP", 12, 160, 2880,
+    [
+      { date: in5Days, time: "09:00" },
+      { date: in7Days, time: "09:00" },
+      { date: in10Days, time: "09:00" },
+    ]
+  );
+
+  await seedClass(
+    "Alquiler de material 1h",
+    "Alquila tabla y neopreno para surfear en Calnegre. Te proporcionamos todo el material necesario para que solo te preocupes de disfrutar del mar.",
+    "RENTAL", 4, 18, 60,
+    [
+      { date: tomorrow, time: "09:00" },
+      { date: tomorrow, time: "11:00" },
+      { date: tomorrow, time: "13:00" },
+      { date: dayAfter, time: "09:00" },
+      { date: dayAfter, time: "11:00" },
+      { date: in3Days, time: "09:00" },
+    ]
+  );
+
+  await seedClass(
+    "Alquiler de material 2h",
+    "Alquila tabla y neopreno para surfear en Calnegre. Te proporcionamos todo el material necesario para que solo te preocupes de disfrutar del mar.",
+    "RENTAL", 4, 30, 120,
+    [
+      { date: tomorrow, time: "09:00" },
+      { date: tomorrow, time: "12:00" },
+      { date: dayAfter, time: "09:00" },
+      { date: dayAfter, time: "12:00" },
+      { date: in3Days, time: "09:00" },
+    ]
+  );
+
+  await seedClass(
+    "Alquiler de material 3h",
+    "Alquila tabla y neopreno para surfear en Calnegre. Te proporcionamos todo el material necesario para que solo te preocupes de disfrutar del mar.",
+    "RENTAL", 4, 45, 180,
+    [
+      { date: tomorrow, time: "09:00" },
+      { date: dayAfter, time: "09:00" },
+      { date: in3Days, time: "09:00" },
+      { date: in5Days, time: "09:00" },
+    ]
+  );
+
+  console.log("Seed completado");
 }
 
-seedClass(
-  "Clase de Surf Iniciación",
-  "Perfecta para principiantes. Aprende las bases del surf en las mejores olas de la Manga del Mar Menor. Incluye material completo.",
-  "GROUP", 8, 35, 120,
-  [
-    { date: tomorrow, time: "09:00" },
-    { date: tomorrow, time: "11:30" },
-    { date: dayAfter, time: "09:00" },
-  ]
-);
-
-seedClass(
-  "Clase Privada de Surf",
-  "Clase individual con instructor dedicado. Ideal para perfeccionar técnica o atención 100% personalizada.",
-  "INDIVIDUAL", 1, 65, 90,
-  [
-    { date: tomorrow, time: "10:00" },
-    { date: tomorrow, time: "16:00" },
-    { date: dayAfter, time: "10:00" },
-  ]
-);
-
-seedClass(
-  "Surf Avanzado",
-  "Para surfistas con experiencia que quieren mejorar su nivel. Trabajamos maniobras, lectura de olas y técnica avanzada.",
-  "GROUP", 6, 45, 120,
-  [
-    { date: in3Days, time: "08:00" },
-    { date: in3Days, time: "11:00" },
-  ]
-);
-
-seedClass(
-  "Surf Infantil",
-  "Clases diseñadas para niños a partir de 6 años. En un entorno seguro y divertido, con monitores especializados.",
-  "GROUP", 6, 25, 90,
-  [
-    { date: dayAfter, time: "16:00" },
-    { date: in5Days, time: "16:00" },
-  ]
-);
-
-db.close();
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(() => prisma.$disconnect());

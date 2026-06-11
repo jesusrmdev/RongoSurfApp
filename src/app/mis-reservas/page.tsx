@@ -7,11 +7,15 @@ type BookingData = {
   id: string;
   status: string;
   participants: number;
+  weight: number | null;
+  height: number | null;
+  wetsuitSize: string | null;
   session: {
     date: Date;
     time: string;
     class: {
       title: string;
+      type: string;
     };
   };
 };
@@ -73,6 +77,12 @@ export default async function MisReservasPage() {
                 <p className="text-xs text-muted mt-0.5">
                   {b.participants} participante{b.participants > 1 ? "s" : ""}
                 </p>
+                {b.weight && b.height && (
+                  <p className="text-xs text-muted mt-0.5">
+                    {b.weight}kg · {b.height}cm
+                    {b.wetsuitSize && ` · Neopreno: ${b.wetsuitSize}`}
+                  </p>
+                )}
               </div>
               <div className="text-right">
                 <span

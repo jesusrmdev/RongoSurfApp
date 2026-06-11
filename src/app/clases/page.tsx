@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { formatDuration } from "@/lib/utils";
 
 type SessionData = {
   id: string;
@@ -72,17 +73,23 @@ export default async function ClasesPage() {
                     className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                       cls.type === "INDIVIDUAL"
                         ? "bg-ocean-light text-ocean"
-                        : "bg-sand/50 text-navy"
+                        : cls.type === "RENTAL"
+                          ? "bg-amber-100 text-amber-700"
+                          : "bg-sand/50 text-navy"
                     }`}
                   >
-                    {cls.type === "INDIVIDUAL" ? "Individual" : "Grupal"}
+                    {cls.type === "INDIVIDUAL"
+                      ? "Individual"
+                      : cls.type === "RENTAL"
+                        ? "Alquiler"
+                        : "Grupal"}
                   </span>
                 </div>
                 <p className="text-sm text-muted mt-1 leading-relaxed">
                   {cls.description}
                 </p>
                 <div className="flex items-center gap-4 mt-3 text-xs text-muted">
-                  <span>{cls.duration} min</span>
+                  <span>{formatDuration(cls.type, cls.duration)}</span>
                   <span>Capacidad: {cls.capacity}</span>
                 </div>
               </div>

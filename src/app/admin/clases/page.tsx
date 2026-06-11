@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/dal";
 import Link from "next/link";
 import ToggleClassButton from "./ToggleClassButton";
+import { formatDuration } from "@/lib/utils";
 
 type ClassWithCount = {
   id: string;
@@ -67,7 +68,7 @@ export default async function AdminClassesPage() {
                 )}
               </div>
               <p className="text-xs text-muted mt-0.5">
-                {cls.price}€ · {cls.duration}min · Cap. {cls.capacity} ·{" "}
+                {cls.price}€ · {formatDuration(cls.type, cls.duration)} · Cap. {cls.capacity} ·{" "}
                 {cls._count.sessions} sesiones
               </p>
             </div>

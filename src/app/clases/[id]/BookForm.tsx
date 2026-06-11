@@ -13,13 +13,18 @@ export default function BookForm({
   classId,
   sessions,
   price,
+  isRental,
 }: {
   classId: string;
   sessions: Session[];
   price: number;
+  isRental?: boolean;
 }) {
   const [selectedSession, setSelectedSession] = useState("");
   const [participants, setParticipants] = useState(1);
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
+  const [wetsuitSize, setWetsuitSize] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{
     text: string;
@@ -35,13 +40,20 @@ export default function BookForm({
     setMessage(null);
 
     try {
+      const body: Record<string, unknown> = {
+        sessionId: selectedSession,
+        participants,
+      };
+      if (isRental) {
+        body.weight = parseInt(weight);
+        body.height = parseInt(height);
+        body.wetsuitSize = wetsuitSize;
+      }
+
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sessionId: selectedSession,
-          participants,
-        }),
+        body: JSON.stringify(body),
       });
 
       if (!res.ok) {
@@ -134,6 +146,61 @@ export default function BookForm({
           Total: {price * participants}€
         </p>
       </div>
+
+      {isRental && (
+        <div className="space-y-4 p-4 bg-sand/30 rounded-lg border border-sand-dark">
+          <p className="text-sm font-medium text-navy">
+            Datos para el material
+          </p>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-navy mb-1">
+                Peso (kg)
+              </label>
+              <input
+                type="number"
+                required
+                min={1}
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
+                className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-navy mb-1">
+                Altura (cm)
+              </label>
+              <input
+                type="number"
+                required
+                min={1}
+                value={height}
+                onChange={(e) => setHeight(e.target.value)}
+                className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-navy mb-1">
+              Talla de neopreno
+            </label>
+            <select
+              required
+              value={wetsuitSize}
+              onChange={(e) => setWetsuitSize(e.target.value)}
+              className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30"
+            >
+              <option value="">Selecciona talla</option>
+              <option value="XS">XS</option>
+              <option value="S">S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+              <option value="XXL">XXL</option>
+            </select>
+          </div>
+        </div>
+      )}
 
       {message && (
         <p

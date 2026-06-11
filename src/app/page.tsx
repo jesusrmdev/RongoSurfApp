@@ -6,18 +6,18 @@ export default function Home() {
       <section className="flex-1 flex items-center justify-center px-4 py-20">
         <div className="max-w-2xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl font-bold text-navy tracking-tight">
-            SurfNatureMurcia
+            Clases de surf en Murcia
           </h1>
           <p className="mt-4 text-lg text-muted leading-relaxed">
-            Escuela de surf en la Manga del Mar Menor. Clases para todos los
-            niveles, material incluido, instructores titulados.
+            Aprende a surfear en un entorno natural en Calnegre. Clases para
+            todos los niveles, material incluido, instructores titulados.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/clases"
-              className="bg-navy text-white px-6 py-3 rounded-md font-medium hover:bg-navy-light transition-colors"
+              className="bg-ocean text-white px-6 py-3 rounded-md font-medium hover:brightness-110 transition-all"
             >
-              Ver clases disponibles
+              Ver actividades
             </Link>
             <Link
               href="/register"
@@ -29,11 +29,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 border-t border-sand/50">
+      <section className="py-16 border-t border-sand">
         <div className="max-w-4xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
           <div>
-            <p className="text-3xl font-bold text-navy">4+</p>
-            <p className="text-sm text-muted mt-1">Tipos de clases</p>
+            <p className="text-3xl font-bold text-navy">5+</p>
+            <p className="text-sm text-muted mt-1">Tipos de actividades</p>
           </div>
           <div>
             <p className="text-3xl font-bold text-navy">Material</p>
@@ -41,7 +41,7 @@ export default function Home() {
           </div>
           <div>
             <p className="text-3xl font-bold text-navy">Todos</p>
-            <p className="text-sm text-muted mt-1">Los niveles</p>
+            <p className="text-sm text-muted mt-1">Los niveles y edades</p>
           </div>
         </div>
       </section>

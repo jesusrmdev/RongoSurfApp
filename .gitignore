@@ -30,6 +30,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# SQLite database (local only, migrated to Neon)
+*.db
+
 # env files (can opt-in for committing if needed)
 .env*
 

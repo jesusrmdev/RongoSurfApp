@@ -27,7 +27,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const session = await verifySession();
-    const { sessionId, participants } = await request.json();
+    const { sessionId, participants, weight, height, wetsuitSize } = await request.json();
 
     if (!sessionId) {
       return NextResponse.json(
@@ -48,17 +48,21 @@ export async function POST(request: Request) {
       );
     }
 
-    const currentBookings = classSession.bookings.reduce(
-      (sum: number, b: { status: string; participants: number }) => sum + (b.status === "CONFIRMED" ? b.participants : 0),
-      0
-    );
+    const isRental = classSession.class.type === "RENTAL";
 
-    const numParticipants = participants || 1;
-    if (currentBookings + numParticipants > classSession.class.capacity) {
-      return NextResponse.json(
-        { error: "No hay suficiente capacidad disponible" },
-        { status: 409 }
+    if (!isRental) {
+      const currentBookings = classSession.bookings.reduce(
+        (sum: number, b: { status: string; participants: number }) => sum + (b.status === "CONFIRMED" ? b.participants : 0),
+        0
       );
+
+      const numParticipants = participants || 1;
+      if (currentBookings + numParticipants > classSession.class.capacity) {
+        return NextResponse.json(
+          { error: "No hay suficiente capacidad disponible" },
+          { status: 409 }
+        );
+      }
     }
 
     const existing = await prisma.booking.findFirst({
@@ -80,7 +84,10 @@ export async function POST(request: Request) {
       data: {
         userId: session.userId,
         sessionId,
-        participants: numParticipants,
+        participants: participants || 1,
+        weight: isRental ? parseInt(weight) : null,
+        height: isRental ? parseInt(height) : null,
+        wetsuitSize: isRental ? wetsuitSize : null,
       },
       include: {
         session: { include: { class: true } },

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 type User = {
   id: string;
@@ -31,9 +32,18 @@ export default function Navbar() {
 
   return (
     <nav className="bg-navy text-white">
-      <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="text-lg font-semibold tracking-tight">
-          SurfNatureMurcia
+      <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-3">
+          <Image
+            src="/logo.png"
+            alt="Surf Nature Murcia"
+            width={40}
+            height={40}
+            className="rounded"
+          />
+          <span className="text-lg font-semibold tracking-tight">
+            Surf Nature Murcia
+          </span>
         </Link>
 
         <div className="hidden sm:flex items-center gap-6 text-sm">

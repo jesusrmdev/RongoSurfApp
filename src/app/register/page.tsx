@@ -8,6 +8,9 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
+  const [wetsuitSize, setWetsuitSize] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -21,7 +24,7 @@ export default function RegisterPage() {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, weight, height, wetsuitSize }),
       });
 
       if (!res.ok) {
@@ -103,6 +106,57 @@ export default function RegisterPage() {
               className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30 focus:border-ocean"
               placeholder="Mínimo 6 caracteres"
             />
+          </div>
+
+          <div className="pt-2 border-t border-sand/50">
+            <p className="text-xs font-medium text-muted mb-3">
+              Datos para el material (opcional)
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-navy mb-1">
+                  Peso (kg)
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  value={weight}
+                  onChange={(e) => setWeight(e.target.value)}
+                  className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-navy mb-1">
+                  Altura (cm)
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                  className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30"
+                />
+              </div>
+            </div>
+            <div className="mt-3">
+              <label className="block text-xs font-medium text-navy mb-1">
+                Talla de neopreno
+              </label>
+              <select
+                required
+                value={wetsuitSize}
+                onChange={(e) => setWetsuitSize(e.target.value)}
+                className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30"
+              >
+                <option value="">Seleccionar</option>
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+              </select>
+            </div>
           </div>
 
           {error && (

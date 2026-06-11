@@ -7,6 +7,9 @@ type BookingWithRelations = {
   userId: string;
   sessionId: string;
   participants: number;
+  weight: number | null;
+  height: number | null;
+  wetsuitSize: string | null;
   status: string;
   createdAt: Date;
   user: { id: string; name: string; email: string };
@@ -84,6 +87,12 @@ export default async function AdminBookingsPage() {
                   {b.user.name} ({b.user.email}) · {b.participants}{" "}
                   participante{b.participants > 1 ? "s" : ""}
                 </p>
+                {b.weight && b.height && (
+                  <p className="text-xs text-muted mt-0.5">
+                    {b.weight}kg · {b.height}cm
+                    {b.wetsuitSize && ` · Neopreno: ${b.wetsuitSize}`}
+                  </p>
+                )}
               </div>
               <div className="flex items-center gap-2">
                 <span
