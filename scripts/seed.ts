@@ -35,7 +35,7 @@ async function main() {
     },
   });
 
-  console.log("Usuarios creados");
+  console.log("Users created");
 
   const tomorrow = new Date(Date.now() + 86400000);
   const dayAfter = new Date(Date.now() + 172800000);
@@ -57,7 +57,7 @@ async function main() {
   ) {
     const existing = await prisma.class.findFirst({ where: { title } });
     if (existing) {
-      console.log(`Ya existe: ${title}`);
+      console.log(`Already exists: ${title}`);
       return;
     }
     await prisma.class.create({
@@ -76,7 +76,7 @@ async function main() {
         },
       },
     });
-    console.log(`Creada: ${title}`);
+    console.log(`Created: ${title}`);
   }
 
   await seedClass(
@@ -152,7 +152,7 @@ async function main() {
     ]
   );
 
-  console.log("Seed completado");
+  console.log("Seed completed");
 }
 
 main()
