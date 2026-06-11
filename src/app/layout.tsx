@@ -18,6 +18,26 @@ export const metadata: Metadata = {
   title: "SurfNatureMurcia - Escuela de Surf",
   description:
     "Reserva tus clases de surf en la Manga del Mar Menor. Clases para todos los niveles, material incluido.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
+  openGraph: {
+    title: "SurfNatureMurcia - Escuela de Surf",
+    description:
+      "Reserva tus clases de surf en la Manga del Mar Menor. Clases para todos los niveles, material incluido.",
+    url: "https://surf-nature-murcia.vercel.app",
+    siteName: "SurfNatureMurcia",
+    images: [
+      {
+        url: "/logo.png",
+        width: 512,
+        height: 512,
+      },
+    ],
+    locale: "es_ES",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
