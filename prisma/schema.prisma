@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  password  String
+  role      String    @default("USER")
+  createdAt DateTime  @default(now())
+  bookings  Booking[]
+}
+
+model Class {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  type        String    @default("GROUP")
+  capacity    Int       @default(8)
+  price       Float
+  duration    Int       @default(90)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  sessions    Session[]
+}
+
+model Session {
+  id        String    @id @default(cuid())
+  classId    String
+  date      DateTime
+  time      String
+  isActive  Boolean   @default(true)
+  class     Class     @relation(fields: [classId], references: [id])
+  bookings  Booking[]
+}
+
+model Booking {
+  id           String   @id @default(cuid())
+  userId       String
+  sessionId    String
+  participants Int      @default(1)
+  status       String   @default("CONFIRMED")
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+  session      Session  @relation(fields: [sessionId], references: [id])
+}
