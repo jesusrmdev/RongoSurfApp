@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 type ClassItem = {
   id: string;
@@ -27,7 +26,6 @@ export default function EditClassForm({
     duration: String(classItem.duration),
   });
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,9 +38,7 @@ export default function EditClassForm({
         body: JSON.stringify(form),
       });
 
-      if (!res.ok) throw new Error();
-
-      router.refresh();
+      if (res.ok) window.location.reload();
     } catch {
       alert("Error al guardar");
     } finally {

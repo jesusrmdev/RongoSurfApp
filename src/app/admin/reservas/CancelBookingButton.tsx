@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function CancelBookingButton({
   bookingId,
@@ -9,19 +8,18 @@ export default function CancelBookingButton({
   bookingId: string;
 }) {
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleCancel = async () => {
     if (!confirm("¿Cancelar esta reserva?")) return;
     setLoading(true);
 
     try {
-      await fetch(`/api/admin/bookings/${bookingId}`, {
+      const res = await fetch(`/api/admin/bookings/${bookingId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "CANCELLED" }),
       });
-      router.refresh();
+      if (res.ok) window.location.reload();
     } catch {
       alert("Error");
     } finally {

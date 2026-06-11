@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 type Session = {
   id: string;
@@ -19,7 +18,6 @@ export default function SessionsManager({
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,14 +25,16 @@ export default function SessionsManager({
     setLoading(true);
 
     try {
-      await fetch("/api/admin/sessions", {
+      const res = await fetch("/api/admin/sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ classId, date, time }),
       });
-      setDate("");
-      setTime("");
-      router.refresh();
+      if (res.ok) {
+        setDate("");
+        setTime("");
+        window.location.reload();
+      }
     } catch {
       alert("Error al crear sesión");
     } finally {
@@ -45,10 +45,10 @@ export default function SessionsManager({
   const handleDelete = async (sessionId: string) => {
     if (!confirm("¿Eliminar esta sesión?")) return;
     try {
-      await fetch(`/api/admin/sessions/${sessionId}`, {
+      const res = await fetch(`/api/admin/sessions/${sessionId}`, {
         method: "DELETE",
       });
-      router.refresh();
+      if (res.ok) window.location.reload();
     } catch {
       alert("Error al eliminar");
     }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function NewClassPage() {
   const [form, setForm] = useState({
@@ -13,7 +12,6 @@ export default function NewClassPage() {
     duration: "90",
   });
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,8 +27,7 @@ export default function NewClassPage() {
       if (!res.ok) throw new Error();
 
       const cls = await res.json();
-      router.push(`/admin/clases/${cls.id}`);
-      router.refresh();
+      window.location.href = `/admin/clases/${cls.id}`;
     } catch {
       alert("Error al crear clase");
     } finally {

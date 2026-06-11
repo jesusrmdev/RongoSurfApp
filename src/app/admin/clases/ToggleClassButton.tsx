@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function ToggleClassButton({
   id,
@@ -11,17 +10,16 @@ export default function ToggleClassButton({
   isActive: boolean;
 }) {
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleToggle = async () => {
     setLoading(true);
     try {
-      await fetch(`/api/admin/classes/${id}`, {
+      const res = await fetch(`/api/admin/classes/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isActive: !isActive }),
       });
-      router.refresh();
+      if (res.ok) window.location.reload();
     } catch {
       alert("Error");
     } finally {

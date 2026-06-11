@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function CancelButton({
   bookingId,
@@ -9,7 +8,6 @@ export default function CancelButton({
   bookingId: string;
 }) {
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleCancel = async () => {
     if (!confirm("¿Cancelar esta reserva?")) return;
@@ -17,7 +15,7 @@ export default function CancelButton({
     setLoading(true);
     try {
       await fetch(`/api/bookings/${bookingId}`, { method: "DELETE" });
-      router.refresh();
+      window.location.reload();
     } catch {
       alert("Error al cancelar");
     } finally {

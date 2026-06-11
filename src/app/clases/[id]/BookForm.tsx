@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 type Session = {
   id: string;
@@ -30,7 +29,6 @@ export default function BookForm({
     text: string;
     error: boolean;
   } | null>(null);
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,8 +65,7 @@ export default function BookForm({
         error: false,
       });
       setTimeout(() => {
-        router.push("/mis-reservas");
-        router.refresh();
+        window.location.href = "/mis-reservas";
       }, 1500);
     } catch {
       setMessage({ text: "Error de conexión", error: true });
