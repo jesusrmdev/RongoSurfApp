@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://surf-nature-murcia.vercel.app"),
   title: "SurfNatureMurcia - Escuela de Surf",
   description:
     "Reserva tus clases de surf en Calnegre. Clases para todos los niveles, material incluido.",
