@@ -68,6 +68,20 @@ export async function DELETE(
   try {
     const { id } = await params;
 
+    const activeBookings = await prisma.booking.count({
+      where: {
+        session: { classId: id },
+        status: "CONFIRMED",
+      },
+    });
+
+    if (activeBookings > 0) {
+      return NextResponse.json(
+        { error: `No se puede desactivar: hay ${activeBookings} reserva(s) activa(s)` },
+        { status: 409 }
+      );
+    }
+
     await prisma.class.update({
       where: { id },
       data: { isActive: false },

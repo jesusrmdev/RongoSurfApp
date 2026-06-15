@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type ClassItem = {
   id: string;
@@ -25,6 +26,7 @@ export default function EditClassForm({
     price: String(classItem.price),
     duration: String(classItem.duration),
   });
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -44,7 +46,7 @@ export default function EditClassForm({
 
       if (res.ok) {
         setSuccess(true);
-        setTimeout(() => window.location.reload(), 1500);
+        setTimeout(() => router.refresh(), 1500);
       } else {
         const data = await res.json();
         setError(data.error || "Error al guardar los cambios");

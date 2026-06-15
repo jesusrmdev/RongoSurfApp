@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Session = {
   id: string;
@@ -15,6 +16,7 @@ export default function SessionsManager({
   classId: string;
   sessions: Session[];
 }) {
+  const router = useRouter();
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [loading, setLoading] = useState(false);
@@ -38,7 +40,7 @@ export default function SessionsManager({
         setSuccess("✓ Sesión añadida correctamente");
         setDate("");
         setTime("");
-        setTimeout(() => window.location.reload(), 1500);
+        setTimeout(() => router.refresh(), 1500);
       } else {
         const data = await res.json();
         setError(data.error || "Error al crear sesión");
@@ -60,7 +62,7 @@ export default function SessionsManager({
       });
       if (res.ok) {
         setSuccess("✓ Sesión eliminada correctamente");
-        setTimeout(() => window.location.reload(), 1500);
+        setTimeout(() => router.refresh(), 1500);
       } else {
         const data = await res.json();
         setError(data.error || "Error al eliminar");

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Session = {
   id: string;
@@ -17,6 +18,7 @@ export default function BookForm({
   price: number;
   isRental?: boolean;
 }) {
+  const router = useRouter();
   const [selectedSession, setSelectedSession] = useState("");
   const [participants, setParticipants] = useState(1);
   const [weight, setWeight] = useState("");
@@ -63,7 +65,7 @@ export default function BookForm({
         error: false,
       });
       setTimeout(() => {
-        window.location.href = "/mis-reservas";
+        router.push("/mis-reservas");
       }, 1500);
     } catch {
       setMessage({ text: "Error de conexión", error: true });

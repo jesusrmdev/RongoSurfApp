@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ToggleClassButton({
   id,
@@ -9,6 +10,7 @@ export default function ToggleClassButton({
   id: string;
   isActive: boolean;
 }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -28,7 +30,7 @@ export default function ToggleClassButton({
       if (res.ok) {
         const msg = isActive ? "✓ Desactivada" : "✓ Activada";
         setSuccess(msg);
-        setTimeout(() => window.location.reload(), 1500);
+        setTimeout(() => router.refresh(), 1500);
       } else {
         setError("Error al cambiar estado");
       }

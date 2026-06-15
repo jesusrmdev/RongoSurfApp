@@ -12,6 +12,17 @@ export async function DELETE(
   try {
     const { id } = await params;
 
+    const activeBookings = await prisma.booking.count({
+      where: { sessionId: id, status: "CONFIRMED" },
+    });
+
+    if (activeBookings > 0) {
+      return NextResponse.json(
+        { error: `No se puede eliminar: hay ${activeBookings} reserva(s) activa(s)` },
+        { status: 409 }
+      );
+    }
+
     await prisma.session.update({
       where: { id },
       data: { isActive: false },

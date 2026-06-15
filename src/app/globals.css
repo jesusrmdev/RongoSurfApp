@@ -5,7 +5,7 @@
   --color-navy-light: #00c4c4;
   --color-sand: #f5f3ef;
   --color-sand-dark: #e0d8c8;
-  --color-ocean: #00a6a6;
+  --color-ocean: var(--color-navy);
   --color-ocean-light: #e0f7f7;
   --color-white: #ffffff;
   --color-foreground: #1a1a1a;
