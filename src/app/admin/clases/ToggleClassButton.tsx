@@ -32,7 +32,8 @@ export default function ToggleClassButton({
         setSuccess(msg);
         setTimeout(() => router.refresh(), 1500);
       } else {
-        setError("Error al cambiar estado");
+        const data = await res.json();
+        setError(data.error || "Error al cambiar estado");
       }
     } catch {
       setError("Error de conexión");

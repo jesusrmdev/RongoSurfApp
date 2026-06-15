@@ -27,7 +27,10 @@ export default function CancelBookingButton({
       if (res.ok) {
         setSuccess("✓ Cancelada");
         setTimeout(() => router.refresh(), 1500);
-      } else setError("Error al cancelar");
+      } else {
+        const data = await res.json();
+        setError(data.error || "Error al cancelar");
+      }
     } catch {
       setError("Error de conexión");
     } finally {

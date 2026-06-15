@@ -4,6 +4,11 @@ import { formatDuration } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  title: "Clases de Surf - Surf Nature Murcia",
+  description: "Descubre nuestras clases de surf en Murcia: grupales, individuales y alquiler de material.",
+};
+
 type SessionData = {
   id: string;
   date: Date;

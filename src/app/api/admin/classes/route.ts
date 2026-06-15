@@ -51,9 +51,9 @@ export async function POST(request: Request) {
         title: body.title,
         description: body.description,
         type: body.type,
-        capacity: parseInt(body.capacity, 10) || 0,
-        price: parseFloat(body.price) || 0,
-        duration: parseInt(body.duration || "90", 10) || 90,
+        capacity: Math.max(0, parseInt(body.capacity, 10) || 0),
+        price: Math.max(0, parseFloat(body.price) || 0),
+        duration: Math.max(0, parseInt(body.duration || "90", 10) || 90),
       },
     });
 

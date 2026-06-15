@@ -1,8 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/auth";
+import CancelButton from "./CancelButton";
 
 export const dynamic = "force-dynamic";
-import CancelButton from "./CancelButton";
+
+export const metadata = {
+  title: "Mis Reservas - Surf Nature Murcia",
+  description: "Consulta y gestiona tus reservas de clases de surf.",
+};
 
 type BookingData = {
   id: string;

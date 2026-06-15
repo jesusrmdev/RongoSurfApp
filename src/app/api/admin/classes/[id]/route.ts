@@ -32,9 +32,9 @@ export async function PUT(
       }
       data.type = body.type;
     }
-    if (body.capacity !== undefined) data.capacity = parseInt(body.capacity, 10) || 0;
-    if (body.price !== undefined) data.price = parseFloat(body.price) || 0;
-    if (body.duration !== undefined) data.duration = parseInt(body.duration, 10) || 0;
+    if (body.capacity !== undefined) data.capacity = Math.max(0, parseInt(body.capacity, 10) || 0);
+    if (body.price !== undefined) data.price = Math.max(0, parseFloat(body.price) || 0);
+    if (body.duration !== undefined) data.duration = Math.max(0, parseInt(body.duration, 10) || 0);
     if (body.isActive !== undefined) {
       if (typeof body.isActive !== "boolean") {
         return NextResponse.json(

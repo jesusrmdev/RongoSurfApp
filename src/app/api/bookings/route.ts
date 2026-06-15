@@ -54,24 +54,15 @@ export async function POST(request: Request) {
       );
     }
 
-    const existing = await prisma.booking.findFirst({
-      where: {
-        userId: session.userId,
-        sessionId,
-        status: "CONFIRMED",
-      },
-    });
-
-    if (existing) {
-      return NextResponse.json(
-        { error: "Ya tienes una reserva en esta sesión" },
-        { status: 409 }
-      );
-    }
-
     const isRental = classSession.class.type === "RENTAL";
 
     const [booking] = await prisma.$transaction(async (tx) => {
+      const existing = await tx.booking.findFirst({
+        where: { userId: session.userId, sessionId, status: "CONFIRMED" },
+      });
+
+      if (existing) throw new Error("DUPLICATE_BOOKING");
+
       if (!isRental) {
         const confirmed = await tx.booking.aggregate({
           where: { sessionId, status: "CONFIRMED" },
@@ -106,6 +97,12 @@ export async function POST(request: Request) {
     if (err instanceof Error && err.message === "CAPACITY_EXCEEDED") {
       return NextResponse.json(
         { error: "No hay suficiente capacidad disponible" },
+        { status: 409 }
+      );
+    }
+    if (err instanceof Error && err.message === "DUPLICATE_BOOKING") {
+      return NextResponse.json(
+        { error: "Ya tienes una reserva en esta sesión" },
         { status: 409 }
       );
     }
