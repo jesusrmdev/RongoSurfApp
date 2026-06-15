@@ -96,7 +96,7 @@ export async function POST(request: Request) {
   } catch (err) {
     if (err instanceof Error && err.message === "CAPACITY_EXCEEDED") {
       return NextResponse.json(
-        { error: "No hay suficiente capacidad disponible" },
+        { error: "No quedan plazas disponibles para la sesión seleccionada" },
         { status: 409 }
       );
     }
