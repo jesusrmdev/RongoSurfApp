@@ -87,7 +87,7 @@ export default async function MisReservasPage() {
                   {formatDate(b.session.date)} — {b.session.time}
                 </p>
                 <p className="text-xs text-muted mt-0.5">
-                  {b.participants} participante{b.participants > 1 ? "s" : ""}
+                  1 participante
                 </p>
                 {(b.weight || b.height || b.wetsuitSize) && (
                   <p className="text-xs text-muted mt-0.5">

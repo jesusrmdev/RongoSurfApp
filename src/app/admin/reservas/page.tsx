@@ -86,8 +86,7 @@ export default async function AdminBookingsPage() {
                   {formatDate(b.session.date)} — {b.session.time}
                 </p>
                 <p className="text-xs text-muted mt-0.5">
-                  {b.user.name} ({b.user.email}) · {b.participants}{" "}
-                  participante{b.participants > 1 ? "s" : ""}
+                  {b.user.name} ({b.user.email}) · 1 participante
                 </p>
                 {(b.weight || b.height || b.wetsuitSize) && (
                   <p className="text-xs text-muted mt-0.5">

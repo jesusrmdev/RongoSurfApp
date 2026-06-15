@@ -20,7 +20,6 @@ export default function BookForm({
 }) {
   const router = useRouter();
   const [selectedSession, setSelectedSession] = useState("");
-  const [participants, setParticipants] = useState(1);
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [wetsuitSize, setWetsuitSize] = useState("");
@@ -40,7 +39,7 @@ export default function BookForm({
     try {
       const body: Record<string, unknown> = {
         sessionId: selectedSession,
-        participants,
+        participants: 1,
       };
       if (isRental) {
         body.weight = parseInt(weight, 10);
@@ -123,26 +122,7 @@ export default function BookForm({
         )}
       </div>
 
-      <div>
-        <label
-          htmlFor="participants"
-          className="block text-sm font-medium text-navy mb-1"
-        >
-          Número de participantes
-        </label>
-        <input
-          id="participants"
-          type="number"
-          min={1}
-          max={10}
-          value={participants}
-           onChange={(e) => setParticipants(parseInt(e.target.value, 10) || 1)}
-          className="w-20 px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30 focus:border-ocean"
-        />
-        <p className="text-xs text-muted mt-1">
-          Total: {price * participants}€
-        </p>
-      </div>
+      <p className="text-sm text-muted">Total: {price}€</p>
 
       {isRental && (
         <div className="space-y-4 p-4 bg-sand/30 rounded-lg border border-sand-dark">

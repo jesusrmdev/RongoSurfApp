@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     if (!session?.userId) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 });
     }
-    const { sessionId, participants, weight, height, wetsuitSize } = await request.json();
+    const { sessionId, weight, height, wetsuitSize } = await request.json();
 
     if (!sessionId) {
       return NextResponse.json(
@@ -70,7 +70,6 @@ export async function POST(request: Request) {
     }
 
     const isRental = classSession.class.type === "RENTAL";
-    const numParticipants = Math.max(1, parseInt(participants, 10) || 1);
 
     const [booking] = await prisma.$transaction(async (tx) => {
       if (!isRental) {
@@ -80,7 +79,7 @@ export async function POST(request: Request) {
         });
 
         const currentBookings = confirmed._sum.participants || 0;
-        if (currentBookings + numParticipants > classSession.class.capacity) {
+        if (currentBookings + 1 > classSession.class.capacity) {
           throw new Error("CAPACITY_EXCEEDED");
         }
       }
@@ -89,7 +88,7 @@ export async function POST(request: Request) {
         data: {
           userId: session.userId,
           sessionId,
-          participants: numParticipants,
+          participants: 1,
           weight: isRental && weight ? parseInt(weight, 10) || null : null,
           height: isRental && height ? parseInt(height, 10) || null : null,
           wetsuitSize: isRental ? wetsuitSize : null,
