@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/dal";
+
+export const dynamic = "force-dynamic";
 import CancelBookingButton from "./CancelBookingButton";
 
 type BookingWithRelations = {
@@ -51,7 +53,7 @@ function formatDate(date: Date) {
     day: "numeric",
     month: "short",
     year: "numeric",
-  }).format(new Date(date));
+  }).format(date);
 }
 
 export default async function AdminBookingsPage() {
@@ -87,10 +89,13 @@ export default async function AdminBookingsPage() {
                   {b.user.name} ({b.user.email}) · {b.participants}{" "}
                   participante{b.participants > 1 ? "s" : ""}
                 </p>
-                {b.weight && b.height && (
+                {(b.weight || b.height || b.wetsuitSize) && (
                   <p className="text-xs text-muted mt-0.5">
-                    {b.weight}kg · {b.height}cm
-                    {b.wetsuitSize && ` · Neopreno: ${b.wetsuitSize}`}
+                    {b.weight && `${b.weight}kg`}
+                    {b.weight && b.height && " · "}
+                    {b.height && `${b.height}cm`}
+                    {(b.weight || b.height) && b.wetsuitSize && " · "}
+                    {b.wetsuitSize && `Neopreno: ${b.wetsuitSize}`}
                   </p>
                 )}
               </div>

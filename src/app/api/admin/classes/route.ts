@@ -38,6 +38,14 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
+    const validTypes = ["GROUP", "INDIVIDUAL", "RENTAL"];
+    if (!body.type || !validTypes.includes(body.type)) {
+      return NextResponse.json(
+        { error: "Tipo de clase no válido" },
+        { status: 400 }
+      );
+    }
+
     const classItem = await prisma.class.create({
       data: {
         title: body.title,

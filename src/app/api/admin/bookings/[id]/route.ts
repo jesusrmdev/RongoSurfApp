@@ -13,6 +13,14 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
+    const validStatuses = ["CONFIRMED", "CANCELLED"];
+    if (!body.status || !validStatuses.includes(body.status)) {
+      return NextResponse.json(
+        { error: "Estado no válido" },
+        { status: 400 }
+      );
+    }
+
     const booking = await prisma.booking.update({
       where: { id },
       data: { status: body.status },

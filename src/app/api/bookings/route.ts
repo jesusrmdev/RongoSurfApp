@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 
     const classSession = await prisma.session.findUnique({
       where: { id: sessionId },
-      include: { class: true, bookings: true },
+      include: { class: true },
     });
 
     if (!classSession || !classSession.isActive) {
@@ -52,23 +52,6 @@ export async function POST(request: Request) {
         { error: "Sesión no disponible" },
         { status: 404 }
       );
-    }
-
-    const isRental = classSession.class.type === "RENTAL";
-
-    if (!isRental) {
-      const currentBookings = classSession.bookings.reduce(
-        (sum: number, b: { status: string; participants: number }) => sum + (b.status === "CONFIRMED" ? b.participants : 0),
-        0
-      );
-
-      const numParticipants = participants || 1;
-      if (currentBookings + numParticipants > classSession.class.capacity) {
-        return NextResponse.json(
-          { error: "No hay suficiente capacidad disponible" },
-          { status: 409 }
-        );
-      }
     }
 
     const existing = await prisma.booking.findFirst({
@@ -86,22 +69,47 @@ export async function POST(request: Request) {
       );
     }
 
-    const booking = await prisma.booking.create({
-      data: {
-        userId: session.userId,
-        sessionId,
-        participants: participants || 1,
-        weight: isRental ? parseInt(weight, 10) || null : null,
-        height: isRental ? parseInt(height, 10) || null : null,
-        wetsuitSize: isRental ? wetsuitSize : null,
-      },
-      include: {
-        session: { include: { class: true } },
-      },
+    const isRental = classSession.class.type === "RENTAL";
+    const numParticipants = Math.max(1, parseInt(participants, 10) || 1);
+
+    const [booking] = await prisma.$transaction(async (tx) => {
+      if (!isRental) {
+        const confirmed = await tx.booking.aggregate({
+          where: { sessionId, status: "CONFIRMED" },
+          _sum: { participants: true },
+        });
+
+        const currentBookings = confirmed._sum.participants || 0;
+        if (currentBookings + numParticipants > classSession.class.capacity) {
+          throw new Error("CAPACITY_EXCEEDED");
+        }
+      }
+
+      const created = await tx.booking.create({
+        data: {
+          userId: session.userId,
+          sessionId,
+          participants: numParticipants,
+          weight: isRental && weight ? parseInt(weight, 10) || null : null,
+          height: isRental && height ? parseInt(height, 10) || null : null,
+          wetsuitSize: isRental ? wetsuitSize : null,
+        },
+        include: {
+          session: { include: { class: true } },
+        },
+      });
+
+      return [created];
     });
 
     return NextResponse.json(booking, { status: 201 });
-  } catch {
+  } catch (err) {
+    if (err instanceof Error && err.message === "CAPACITY_EXCEEDED") {
+      return NextResponse.json(
+        { error: "No hay suficiente capacidad disponible" },
+        { status: 409 }
+      );
+    }
     return NextResponse.json(
       { error: "Error al crear reserva" },
       { status: 500 }

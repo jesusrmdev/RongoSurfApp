@@ -9,15 +9,30 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const session = await prisma.session.create({
+    if (!body.classId || !body.date || !body.time) {
+      return NextResponse.json(
+        { error: "Faltan campos obligatorios" },
+        { status: 400 }
+      );
+    }
+
+    const parsedDate = new Date(body.date);
+    if (isNaN(parsedDate.getTime())) {
+      return NextResponse.json(
+        { error: "Fecha no válida" },
+        { status: 400 }
+      );
+    }
+
+    const newSession = await prisma.session.create({
       data: {
         classId: body.classId,
-        date: new Date(body.date),
+        date: parsedDate,
         time: body.time,
       },
     });
 
-    return NextResponse.json(session, { status: 201 });
+    return NextResponse.json(newSession, { status: 201 });
   } catch {
     return NextResponse.json(
       { error: "Error al crear sesión" },

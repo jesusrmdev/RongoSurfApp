@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/auth";
-import { redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 import CancelButton from "./CancelButton";
 
 type BookingData = {
@@ -21,7 +22,7 @@ type BookingData = {
 };
 
 async function getBookings(userId: string): Promise<BookingData[]> {
-  return prisma.booking.findMany({
+  const bookings = await prisma.booking.findMany({
     where: { userId },
     include: {
       session: {
@@ -29,7 +30,20 @@ async function getBookings(userId: string): Promise<BookingData[]> {
       },
     },
     orderBy: { createdAt: "desc" },
-  }) as Promise<BookingData[]>;
+  });
+  return bookings.map(b => ({
+    id: b.id,
+    status: b.status,
+    participants: b.participants,
+    weight: b.weight,
+    height: b.height,
+    wetsuitSize: b.wetsuitSize,
+    session: {
+      date: b.session.date,
+      time: b.session.time,
+      class: { title: b.session.class.title, type: b.session.class.type },
+    },
+  }));
 }
 
 function formatDate(date: Date) {
@@ -38,13 +52,11 @@ function formatDate(date: Date) {
     day: "numeric",
     month: "long",
     year: "numeric",
-  }).format(new Date(date));
+  }).format(date);
 }
 
 export default async function MisReservasPage() {
   const session = await verifySession();
-  if (!session) redirect("/login");
-
   const bookings = await getBookings(session.userId);
 
   return (
@@ -77,10 +89,13 @@ export default async function MisReservasPage() {
                 <p className="text-xs text-muted mt-0.5">
                   {b.participants} participante{b.participants > 1 ? "s" : ""}
                 </p>
-                {b.weight && b.height && (
+                {(b.weight || b.height || b.wetsuitSize) && (
                   <p className="text-xs text-muted mt-0.5">
-                    {b.weight}kg · {b.height}cm
-                    {b.wetsuitSize && ` · Neopreno: ${b.wetsuitSize}`}
+                    {b.weight && `${b.weight}kg`}
+                    {b.weight && b.height && " · "}
+                    {b.height && `${b.height}cm`}
+                    {(b.weight || b.height) && b.wetsuitSize && " · "}
+                    {b.wetsuitSize && `Neopreno: ${b.wetsuitSize}`}
                   </p>
                 )}
               </div>

@@ -76,7 +76,7 @@ export default function SessionsManager({
       day: "numeric",
       month: "short",
       year: "numeric",
-    }).format(new Date(d));
+    }).format(d);
   }
 
   return (

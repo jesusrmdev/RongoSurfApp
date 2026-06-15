@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/dal";
+
+export const dynamic = "force-dynamic";
 import { notFound } from "next/navigation";
 import EditClassForm from "./EditClassForm";
 import SessionsManager from "./SessionsManager";
@@ -32,7 +34,18 @@ async function getClass(id: string): Promise<ClassWithSessions | null> {
       },
     },
   });
-  return cls as ClassWithSessions | null;
+  if (!cls) return null;
+  return {
+    id: cls.id,
+    title: cls.title,
+    description: cls.description,
+    type: cls.type,
+    capacity: cls.capacity,
+    price: cls.price,
+    duration: cls.duration,
+    isActive: cls.isActive,
+    sessions: cls.sessions.map(s => ({ id: s.id, date: s.date, time: s.time })),
+  };
 }
 
 export default async function EditClassPage({

@@ -101,6 +101,7 @@ export default function EditClassForm({
           >
             <option value="GROUP">Grupal</option>
             <option value="INDIVIDUAL">Individual</option>
+            <option value="RENTAL">Alquiler</option>
           </select>
         </div>
 

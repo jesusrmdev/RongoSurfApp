@@ -41,8 +41,8 @@ export default function BookForm({
         participants,
       };
       if (isRental) {
-        body.weight = parseInt(weight);
-        body.height = parseInt(height);
+        body.weight = parseInt(weight, 10);
+        body.height = parseInt(height, 10);
         body.wetsuitSize = wetsuitSize;
       }
 
@@ -77,7 +77,7 @@ export default function BookForm({
       weekday: "long",
       day: "numeric",
       month: "long",
-    }).format(new Date(date));
+    }).format(date);
   }
 
   return (
@@ -134,7 +134,7 @@ export default function BookForm({
           min={1}
           max={10}
           value={participants}
-          onChange={(e) => setParticipants(parseInt(e.target.value) || 1)}
+           onChange={(e) => setParticipants(parseInt(e.target.value, 10) || 1)}
           className="w-20 px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30 focus:border-ocean"
         />
         <p className="text-xs text-muted mt-1">

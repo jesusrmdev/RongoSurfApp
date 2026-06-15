@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/dal";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboard() {
   await requireAdmin();
   return (

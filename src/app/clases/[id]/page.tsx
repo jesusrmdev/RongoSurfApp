@@ -5,6 +5,19 @@ import BookForm from "./BookForm";
 import { formatDuration } from "@/lib/utils";
 import { getSession } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const cls = await prisma.class.findUnique({ where: { id }, select: { title: true } });
+  if (!cls) return { title: "Clase no encontrada - Surf Nature Murcia" };
+  return { title: `${cls.title} - Surf Nature Murcia` };
+}
+
 type SessionData = {
   id: string;
   date: Date;
@@ -32,7 +45,7 @@ async function getClass(id: string): Promise<ClassData | null> {
       },
     },
   });
-  return cls ? { ...cls, sessions: cls.sessions.filter(s => s.isActive && new Date(s.date) >= new Date()).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) } : null;
+  return cls ? { ...cls, sessions: cls.sessions } : null;
 }
 
 export default async function ClassDetailPage({

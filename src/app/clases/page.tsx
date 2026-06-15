@@ -34,7 +34,7 @@ async function getClasses(): Promise<ClassData[]> {
   });
   return classes.map(cls => ({
     ...cls,
-    sessions: cls.sessions.filter(s => s.isActive && new Date(s.date) >= new Date()).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
+    sessions: cls.sessions,
   }));
 }
 
@@ -43,7 +43,7 @@ function formatDate(date: Date) {
     weekday: "short",
     day: "numeric",
     month: "short",
-  }).format(new Date(date));
+  }).format(date);
 }
 
 export default async function ClasesPage() {
