@@ -33,6 +33,7 @@ Live at https://surf-nature-murcia.vercel.app
 - RENTAL type available in admin forms
 - Password minLength on client matches server (8)
 - No dead code or unused imports
+- Capacity error message: "No quedan plazas disponibles para la sesión seleccionada"
 
 ## Key Files
 - `src/lib/auth.ts` — JWT create/verify/session management
