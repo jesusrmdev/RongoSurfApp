@@ -1,10 +1,18 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/dal";
+import { getSession } from "@/lib/auth";
+
+async function checkAdmin() {
+  const session = await getSession();
+  if (!session?.userId) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  if (session.role !== "ADMIN") return NextResponse.json({ error: "No autorizado" }, { status: 403 });
+  return null;
+}
 
 export async function GET() {
+  const authError = await checkAdmin();
+  if (authError) return authError;
   try {
-    await requireAdmin();
     const classes = await prisma.class.findMany({
       include: {
         sessions: {
@@ -25,8 +33,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const authError = await checkAdmin();
+  if (authError) return authError;
   try {
-    await requireAdmin();
     const body = await request.json();
 
     const classItem = await prisma.class.create({
@@ -34,9 +43,9 @@ export async function POST(request: Request) {
         title: body.title,
         description: body.description,
         type: body.type,
-        capacity: parseInt(body.capacity),
-        price: parseFloat(body.price),
-        duration: parseInt(body.duration || "90"),
+        capacity: parseInt(body.capacity, 10) || 0,
+        price: parseFloat(body.price) || 0,
+        duration: parseInt(body.duration || "90", 10) || 90,
       },
     });
 

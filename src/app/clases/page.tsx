@@ -30,7 +30,10 @@ async function getClasses(): Promise<ClassData[]> {
     },
     orderBy: { createdAt: "desc" },
   });
-  return classes as ClassData[];
+  return classes.map(cls => ({
+    ...cls,
+    sessions: cls.sessions.filter(s => s.isActive && new Date(s.date) >= new Date()).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
+  }));
 }
 
 function formatDate(date: Date) {

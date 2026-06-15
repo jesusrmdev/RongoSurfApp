@@ -58,7 +58,7 @@ User ──┐
 
 1. User registers/logs in → server creates JWT payload `{ userId, role, email }`
 2. JWT is signed with `jose` and stored as HTTP-only cookie
-3. `proxy.ts` middleware checks cookie on protected routes
+3. `middleware.ts` checks cookie on protected routes
 4. `getSession()` in `src/lib/auth.ts` validates JWT on every request
 
 ## Key Design Decisions
@@ -75,15 +75,26 @@ Prisma v7 requires driver adapters. We use `@prisma/adapter-neon` with WebSocket
 ### SQLite → PostgreSQL Migration
 Originally developed with SQLite for local dev, migrated to Neon PostgreSQL for Vercel deployment. Migration history preserved in `prisma/migrations/`.
 
-## Middleware (proxy.ts)
+### Auth Pattern
+- **API routes:** Use `getSession()` from `@/lib/auth`. Check `userId` and `role` manually. Return 401/403 JSON.
+- **Server components (pages):** Use `verifySession()` or `requireAdmin()` from `@/lib/dal`. These call `redirect()` on failure.
+
+## Middleware (middleware.ts)
 
 ```
-Request ──▶ proxy.ts ──▶ match route ──▶ public? → allow
-                              │
-                              ├── /clases → public
-                              ├── /login, /register → public
-                              ├── /mis-reservas → requires USER
-                              └── /admin → requires ADMIN
+
+Request ──▶ middleware.ts ──▶ match route ──▶ public? → allow
+                                    │
+                                    ├── /clases → public
+                                    ├── /login, /register → public
+                                    ├── /mis-reservas → requires USER
+                                    └── /admin → requires ADMIN
+
+Security headers added to all responses:
+- Strict-Transport-Security (HSTS)
+- X-Frame-Options: DENY
+- X-Content-Type-Options: nosniff
+- Referrer-Policy: strict-origin-when-cross-origin
 ```
 
 ## Styling

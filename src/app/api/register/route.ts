@@ -15,6 +15,20 @@ export async function POST(request: Request) {
       );
     }
 
+    if (password.length < 8) {
+      return NextResponse.json(
+        { error: "La contraseña debe tener al menos 8 caracteres" },
+        { status: 400 }
+      );
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return NextResponse.json(
+        { error: "Email no válido" },
+        { status: 400 }
+      );
+    }
+
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
       return NextResponse.json(
@@ -23,14 +37,14 @@ export async function POST(request: Request) {
       );
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 12);
     const user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
-        weight: weight ? parseInt(weight) : null,
-        height: height ? parseInt(height) : null,
+        weight: weight ? parseInt(weight, 10) || null : null,
+        height: height ? parseInt(height, 10) || null : null,
         wetsuitSize: wetsuitSize || null,
       },
     });
@@ -41,7 +55,7 @@ export async function POST(request: Request) {
       { id: user.id, name: user.name, email: user.email, role: user.role },
       { status: 201 }
     );
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Error al registrar usuario" },
       { status: 500 }

@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { verifySession } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 
 export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await verifySession();
+    const session = await getSession();
+    if (!session?.userId) {
+      return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    }
     const { id } = await params;
 
     const booking = await prisma.booking.findUnique({

@@ -5,6 +5,9 @@ import { redirect } from "next/navigation";
 import { cache } from "react";
 
 const secretKey = process.env.SESSION_SECRET;
+if (!secretKey || secretKey.length < 32) {
+  throw new Error("SESSION_SECRET must be at least 32 characters");
+}
 const encodedKey = new TextEncoder().encode(secretKey);
 
 type SessionPayload = {

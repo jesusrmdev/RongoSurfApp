@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { requireAdmin } from "@/lib/dal";
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  await requireAdmin();
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
       <h1 className="text-2xl font-bold text-navy">Panel de Administración</h1>

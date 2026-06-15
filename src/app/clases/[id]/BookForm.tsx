@@ -9,12 +9,10 @@ type Session = {
 };
 
 export default function BookForm({
-  classId,
   sessions,
   price,
   isRental,
 }: {
-  classId: string;
   sessions: Session[];
   price: number;
   isRental?: boolean;

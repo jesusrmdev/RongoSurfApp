@@ -140,7 +140,6 @@ export default function RegisterPage() {
                 Talla de neopreno
               </label>
               <select
-                required
                 value={wetsuitSize}
                 onChange={(e) => setWetsuitSize(e.target.value)}
                 className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30"

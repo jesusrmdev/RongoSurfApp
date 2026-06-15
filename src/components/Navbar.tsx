@@ -23,6 +23,13 @@ export default function Navbar() {
       .then(setUser);
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const close = () => setMenuOpen(false);
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, [menuOpen]);
+
   const handleLogout = async () => {
     await fetch("/api/logout", { method: "POST" });
     setUser(null);
@@ -31,7 +38,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-navy text-white">
+    <nav className="bg-navy text-white" onClick={(e) => e.stopPropagation()}>
       <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           <Image

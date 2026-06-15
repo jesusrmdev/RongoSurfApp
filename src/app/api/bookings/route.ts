@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { verifySession } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 
 export async function GET() {
   try {
-    const session = await verifySession();
+    const session = await getSession();
+    if (!session?.userId) {
+      return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    }
     const bookings = await prisma.booking.findMany({
       where: { userId: session.userId },
       include: {
@@ -26,7 +29,10 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const session = await verifySession();
+    const session = await getSession();
+    if (!session?.userId) {
+      return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    }
     const { sessionId, participants, weight, height, wetsuitSize } = await request.json();
 
     if (!sessionId) {
@@ -85,8 +91,8 @@ export async function POST(request: Request) {
         userId: session.userId,
         sessionId,
         participants: participants || 1,
-        weight: isRental ? parseInt(weight) : null,
-        height: isRental ? parseInt(height) : null,
+        weight: isRental ? parseInt(weight, 10) || null : null,
+        height: isRental ? parseInt(height, 10) || null : null,
         wetsuitSize: isRental ? wetsuitSize : null,
       },
       include: {

@@ -23,7 +23,7 @@ type ClassWithSessions = {
 };
 
 async function getClass(id: string): Promise<ClassWithSessions | null> {
-  return prisma.class.findUnique({
+  const cls = await prisma.class.findUnique({
     where: { id },
     include: {
       sessions: {
@@ -31,7 +31,8 @@ async function getClass(id: string): Promise<ClassWithSessions | null> {
         orderBy: { date: "asc" },
       },
     },
-  }) as Promise<ClassWithSessions | null>;
+  });
+  return cls as ClassWithSessions | null;
 }
 
 export default async function EditClassPage({

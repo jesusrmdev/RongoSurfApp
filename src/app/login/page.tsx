@@ -105,11 +105,6 @@ export default function LoginPage() {
           </Link>
         </p>
 
-        <div className="mt-4 p-3 bg-sand/30 rounded-md text-xs text-muted">
-          <p className="font-medium text-navy mb-1">Demo:</p>
-          <p>Admin: admin@surfnaturemurcia.com / admin123</p>
-          <p>Usuario: surfer@test.com / surf123</p>
-        </div>
       </div>
     </div>
   );

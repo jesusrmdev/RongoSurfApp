@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { prisma } from "./prisma";
-import { verifySession } from "./auth";
+import { verifySession, getSession } from "./auth";
 
 export const getCurrentUser = cache(async () => {
   const session = await verifySession();
@@ -22,3 +22,22 @@ export const requireAdmin = cache(async () => {
   }
   return session;
 });
+
+export async function requireAuthApi() {
+  const session = await getSession();
+  if (!session?.userId) {
+    return { error: "No autenticado", status: 401 as const };
+  }
+  return { userId: session.userId, role: session.role };
+}
+
+export async function requireAdminApi() {
+  const session = await getSession();
+  if (!session?.userId) {
+    return { error: "No autenticado", status: 401 as const };
+  }
+  if (session.role !== "ADMIN") {
+    return { error: "No autorizado", status: 403 as const };
+  }
+  return { userId: session.userId, role: session.role };
+}

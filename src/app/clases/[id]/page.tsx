@@ -32,15 +32,7 @@ async function getClass(id: string): Promise<ClassData | null> {
       },
     },
   });
-  return cls as ClassData | null;
-}
-
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("es-ES", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  }).format(new Date(date));
+  return cls ? { ...cls, sessions: cls.sessions.filter(s => s.isActive && new Date(s.date) >= new Date()).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) } : null;
 }
 
 export default async function ClassDetailPage({
@@ -88,7 +80,6 @@ export default async function ClassDetailPage({
 
       {session?.userId ? (
         <BookForm
-          classId={cls.id}
           sessions={cls.sessions}
           price={cls.price}
           isRental={cls.type === "RENTAL"}

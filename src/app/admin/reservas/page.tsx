@@ -42,7 +42,7 @@ async function getBookings(): Promise<BookingWithRelations[]> {
       },
     },
     orderBy: { createdAt: "desc" },
-  }) as Promise<BookingWithRelations[]>;
+  }  );
 }
 
 function formatDate(date: Date) {

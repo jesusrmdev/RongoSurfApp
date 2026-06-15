@@ -26,10 +26,14 @@ export default function EditClassForm({
     duration: String(classItem.duration),
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
+    setSuccess(false);
 
     try {
       const res = await fetch(`/api/admin/classes/${classItem.id}`, {
@@ -38,9 +42,15 @@ export default function EditClassForm({
         body: JSON.stringify(form),
       });
 
-      if (res.ok) window.location.reload();
+      if (res.ok) {
+        setSuccess(true);
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        const data = await res.json();
+        setError(data.error || "Error al guardar los cambios");
+      }
     } catch {
-      alert("Error al guardar");
+      setError("Error de conexión");
     } finally {
       setLoading(false);
     }
@@ -48,6 +58,12 @@ export default function EditClassForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-md">{error}</p>
+      )}
+      {success && (
+        <p className="text-sm text-green-600 bg-green-50 px-3 py-2 rounded-md font-medium">✓ Cambios guardados correctamente</p>
+      )}
       <div>
         <label className="block text-sm font-medium text-navy mb-1">
           Título
@@ -97,7 +113,7 @@ export default function EditClassForm({
             required
             value={form.capacity}
             onChange={(e) => setForm({ ...form, capacity: e.target.value })}
-            className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm"
+            className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30 focus:border-ocean"
           />
         </div>
       </div>
@@ -113,7 +129,7 @@ export default function EditClassForm({
             required
             value={form.price}
             onChange={(e) => setForm({ ...form, price: e.target.value })}
-            className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm"
+            className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30 focus:border-ocean"
           />
         </div>
 
@@ -126,7 +142,7 @@ export default function EditClassForm({
             required
             value={form.duration}
             onChange={(e) => setForm({ ...form, duration: e.target.value })}
-            className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm"
+            className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30 focus:border-ocean"
           />
         </div>
       </div>

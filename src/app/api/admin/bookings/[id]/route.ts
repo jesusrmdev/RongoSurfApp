@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/dal";
+import { getSession } from "@/lib/auth";
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const session = await getSession();
+  if (!session?.userId) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  if (session.role !== "ADMIN") return NextResponse.json({ error: "No autorizado" }, { status: 403 });
   try {
-    await requireAdmin();
     const { id } = await params;
     const body = await request.json();
 
