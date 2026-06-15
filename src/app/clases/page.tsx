@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { formatDuration } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 type SessionData = {
   id: string;
   date: Date;
