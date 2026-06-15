@@ -24,20 +24,20 @@ A full-featured surf school booking platform built for **Surf Nature Murcia**, a
 
 ### Public
 - Landing page with school info
-- Browse all active classes (group lessons, surf camp, equipment rental)
+- Browse all active classes (group, individual, equipment rental)
 - View class details with available sessions
 
 ### Customer (authenticated)
-- Register with name, email, password (min 8 chars) + optional weight/height/wetsuit size
-- Book class sessions (group lessons) or equipment rentals (with weight/height/wetsuit size)
+- Register with name, email, password + optional rental data
+- Book a session (one person per booking)
 - View and cancel personal bookings
 
 ### Admin
-- Dashboard overview (admin-only)
-- CRUD manage classes (create, edit, toggle active)
+- Dashboard overview
+- CRUD manage classes (create, edit, toggle active/inactive)
 - Manage sessions per class (add, remove)
 - View all bookings with customer details
-- Full admin API
+- Cancel any booking
 
 ---
 
@@ -52,7 +52,7 @@ A full-featured surf school booking platform built for **Surf Nature Murcia**, a
 ├── public/
 │   └── logo.png               # School logo
 ├── scripts/
-│   └── seed.ts                # Database seeder (6 courses + 2 test users)
+│   └── seed.ts                # Database seeder
 ├── src/
 │   ├── app/
 │   │   ├── page.tsx           # Landing page
@@ -111,15 +111,20 @@ JWT-based authentication stored in HTTP-only cookies:
 
 ## Security
 
-- Passwords hashed with bcrypt (12 rounds)
-- Server-side validation: email format, password length (min 8 chars)
-- Protected against NaN injection (all numeric inputs validated with `||` fallback)
-- CSRF mitigated via `SameSite=Lax` cookies
-- HTTP-only, Secure session cookies
-- API routes return proper 401/403 instead of 500 on auth failures
-- `SESSION_SECRET` validated at startup (min 32 chars required)
+- Passwords hashed with **bcrypt (12 rounds)**
+- Server-side validation: email format, password length (min 8 chars), enum validation, NaN guards
+- **`$transaction`** for capacity checks — prevents overbooking race conditions
+- **Duplicate booking check** inside transaction — prevents double-book race condition
+- CSRF mitigated via **`SameSite=Lax`** cookies
+- **HTTP-only, Secure** session cookies
+- API routes return proper **401/403** instead of 500 on auth failures
+- **`SESSION_SECRET`** validated at startup (min 32 chars required)
 - No SQL injection (Prisma ORM, no raw queries)
 - No XSS vectors (React auto-escaping, no `dangerouslySetInnerHTML`)
+- Admin deactivation of classes/sessions blocked if active bookings exist
+- All numeric inputs guarded with `Math.max(0, ...)` — no negative values
+- Every API route authenticates before any DB operation
+- All admin API routes validate `role === "ADMIN"` before processing
 
 ---
 
@@ -168,10 +173,12 @@ npm run dev
 | `/api/me` | GET | User | Current user info |
 | `/api/classes` | GET | - | List active classes |
 | `/api/classes/[id]` | GET | - | Class details + sessions |
-| `/api/bookings` | GET/POST | User | List/create bookings |
-| `/api/bookings/[id]` | DELETE | User | Cancel booking |
+| `/api/bookings` | GET | User | List own bookings |
+| `/api/bookings` | POST | User | Create booking (1 person) |
+| `/api/bookings/[id]` | DELETE | User | Cancel own booking |
 | `/api/admin/classes` | GET/POST | Admin | List/create classes |
-| `/api/admin/classes/[id]` | PUT/DELETE | Admin | Update/delete class |
+| `/api/admin/classes/[id]` | PUT | Admin | Update class |
+| `/api/admin/classes/[id]` | DELETE | Admin | Deactivate class |
 | `/api/admin/sessions` | POST | Admin | Create session |
 | `/api/admin/sessions/[id]` | DELETE | Admin | Remove session |
 | `/api/admin/bookings` | GET | Admin | List all bookings |
@@ -203,14 +210,15 @@ vercel --prod
 
 ### v1.0.0 (2026-06-15)
 - Initial production release
-- Class booking system with group lessons and equipment rental
+- Class booking system (group, individual, equipment rental)
 - Admin panel with full CRUD for classes, sessions, and bookings
-- JWT authentication with httpOnly cookies
+- JWT authentication with httpOnly cookies, bcrypt(12)
+- Prisma `$transaction` for overbooking prevention
 - Neon PostgreSQL with Prisma ORM
 - Responsive design with Tailwind CSS v4
-- Security: HSTS, XSS protection, input validation, bcrypt(12)
-- Error boundary, loading states, and custom 404 page
-- OG tags and SEO metadata
+- Security: HSTS, XSS protection, input validation, enum validation
+- Error boundary, loading states, custom 404, SEO metadata
+- Rate limiting deferred (bcrypt(12) mitigates brute force)
 
 ---
 
