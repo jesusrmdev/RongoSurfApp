@@ -65,12 +65,14 @@ export default function Navbar() {
               >
                 Mi Perfil
               </Link>
-              <Link
-                href="/mis-reservas"
-                className="hover:text-sand transition-colors"
-              >
-                Mis Reservas
-              </Link>
+              {user.role !== "ADMIN" && (
+                <Link
+                  href="/mis-reservas"
+                  className="hover:text-sand transition-colors"
+                >
+                  Mis Reservas
+                </Link>
+              )}
               {user.role === "ADMIN" && (
                 <Link
                   href="/admin"
@@ -135,9 +137,11 @@ export default function Navbar() {
               <Link href="/perfil" onClick={() => setMenuOpen(false)}>
                 Mi Perfil
               </Link>
-              <Link href="/mis-reservas" onClick={() => setMenuOpen(false)}>
-                Mis Reservas
-              </Link>
+              {user.role !== "ADMIN" && (
+                <Link href="/mis-reservas" onClick={() => setMenuOpen(false)}>
+                  Mis Reservas
+                </Link>
+              )}
               {user.role === "ADMIN" && (
                 <Link href="/admin" onClick={() => setMenuOpen(false)}>
                   Admin
