@@ -126,7 +126,7 @@ export default function RegisterPage() {
 
           <div className="pt-2 border-t border-sand/50">
             <p className="text-xs font-medium text-muted mb-3">
-              Datos para el material
+              Datos para el material (obligatorio)
             </p>
             <div className="grid grid-cols-2 gap-4">
               <div>
