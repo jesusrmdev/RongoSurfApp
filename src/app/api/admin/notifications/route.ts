@@ -12,7 +12,7 @@ export async function GET() {
   today.setHours(0, 0, 0, 0);
 
   const count = await prisma.booking.count({
-    where: { createdAt: { gte: today } },
+    where: { createdAt: { gte: today }, status: "CONFIRMED" },
   });
 
   return NextResponse.json({ count });
