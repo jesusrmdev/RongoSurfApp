@@ -15,6 +15,7 @@ type User = {
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [newBookings, setNewBookings] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -22,6 +23,18 @@ export default function Navbar() {
       .then((r) => (r.ok ? r.json() : null))
       .then(setUser);
   }, []);
+
+  useEffect(() => {
+    if (user?.role !== "ADMIN") return;
+    const check = () =>
+      fetch("/api/admin/notifications")
+        .then((r) => r.ok ? r.json() : null)
+        .then((d) => d && setNewBookings(d.count))
+        .catch(() => {});
+    check();
+    const id = setInterval(check, 30000);
+    return () => clearInterval(id);
+  }, [user?.role]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -76,9 +89,14 @@ export default function Navbar() {
               {user.role === "ADMIN" && (
                 <Link
                   href="/admin"
-                  className="hover:text-sand transition-colors"
+                  className="hover:text-sand transition-colors relative"
                 >
                   Admin
+                  {newBookings > 0 && (
+                    <span className="absolute -top-2 -right-4 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">
+                      {newBookings}
+                    </span>
+                  )}
                 </Link>
               )}
               <span className="text-sand/60">{user.name}</span>
@@ -143,8 +161,13 @@ export default function Navbar() {
                 </Link>
               )}
               {user.role === "ADMIN" && (
-                <Link href="/admin" onClick={() => setMenuOpen(false)}>
+                <Link href="/admin" onClick={() => setMenuOpen(false)} className="relative inline-block w-fit">
                   Admin
+                  {newBookings > 0 && (
+                    <span className="inline-flex ml-1 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 items-center justify-center px-1">
+                      {newBookings}
+                    </span>
+                  )}
                 </Link>
               )}
               <button onClick={handleLogout}>Cerrar sesión</button>
