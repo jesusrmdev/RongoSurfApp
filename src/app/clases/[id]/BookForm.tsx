@@ -39,7 +39,8 @@ export default function BookForm({
           setHeight(String(user.height));
           setWetsuitSize(user.wetsuitSize);
         }
-      });
+      })
+      .catch(() => {});
   }, [isRental]);
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -10,8 +10,8 @@ const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  const adminPassword = bcrypt.hashSync("admin123", 10);
-  const userPassword = bcrypt.hashSync("surf123", 10);
+  const adminPassword = bcrypt.hashSync("admin123", 12);
+  const userPassword = bcrypt.hashSync("surf123", 12);
 
   await prisma.user.upsert({
     where: { email: "admin@surfnaturemurcia.com" },

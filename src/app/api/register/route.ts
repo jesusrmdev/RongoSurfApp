@@ -65,7 +65,7 @@ export async function POST(request: Request) {
     );
   } catch {
     return NextResponse.json(
-        { error: "Debes rellenar todos los campos" },
+      { error: "Error al registrar usuario" },
       { status: 500 }
     );
   }

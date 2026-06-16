@@ -17,7 +17,7 @@ export const getCurrentUser = cache(async () => {
 
 export const requireAdmin = cache(async () => {
   const session = await verifySession();
-  if (session.role !== "ADMIN") {
+  if (!session || session.role !== "ADMIN") {
     throw new Error("Unauthorized");
   }
   return session;
