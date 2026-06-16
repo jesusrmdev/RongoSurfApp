@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/dal";
 
 export const dynamic = "force-dynamic";
 import CancelBookingButton from "./CancelBookingButton";
+import DeleteBookingButton from "./DeleteBookingButton";
 
 type BookingWithRelations = {
   id: string;
@@ -108,6 +109,7 @@ export default async function AdminBookingsPage() {
                 {b.status === "CONFIRMED" && (
                   <CancelBookingButton bookingId={b.id} />
                 )}
+                <DeleteBookingButton bookingId={b.id} />
               </div>
             </div>
           </div>
