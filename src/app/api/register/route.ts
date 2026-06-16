@@ -5,10 +5,10 @@ import { createSession } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
-    const { name, email, password, weight, height, wetsuitSize } =
+    const { name, email, password, phone, weight, height, wetsuitSize } =
       await request.json();
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !phone || !weight || !height || !wetsuitSize) {
       return NextResponse.json(
         { error: "Todos los campos son obligatorios" },
         { status: 400 }
@@ -43,9 +43,10 @@ export async function POST(request: Request) {
         name,
         email,
         password: hashedPassword,
-        weight: weight ? parseInt(weight, 10) || null : null,
-        height: height ? parseInt(height, 10) || null : null,
-        wetsuitSize: wetsuitSize || null,
+        phone,
+        weight: parseInt(weight, 10),
+        height: parseInt(height, 10),
+        wetsuitSize,
       },
     });
 

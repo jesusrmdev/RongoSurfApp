@@ -12,9 +12,10 @@ model User {
   email       String    @unique
   password    String
   role        String    @default("USER")
-  weight      Int?      // kg
-  height      Int?      // cm
-  wetsuitSize String?   // XS-XXL
+  phone       String
+  weight      Int       // kg
+  height      Int       // cm
+  wetsuitSize String    // XS-XXL
   createdAt   DateTime  @default(now())
   bookings    Booking[]
 }

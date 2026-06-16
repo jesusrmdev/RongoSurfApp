@@ -10,6 +10,7 @@ export default function RegisterPage() {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [wetsuitSize, setWetsuitSize] = useState("");
+  const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -22,7 +23,7 @@ export default function RegisterPage() {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, weight, height, wetsuitSize }),
+        body: JSON.stringify({ name, email, password, phone, weight, height, wetsuitSize }),
       });
 
       if (!res.ok) {
@@ -105,9 +106,27 @@ export default function RegisterPage() {
             />
           </div>
 
+          <div>
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium text-navy mb-1"
+            >
+              Teléfono móvil
+            </label>
+            <input
+              id="phone"
+              type="tel"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30 focus:border-ocean"
+              placeholder="Ej: 612345678"
+            />
+          </div>
+
           <div className="pt-2 border-t border-sand/50">
             <p className="text-xs font-medium text-muted mb-3">
-              Datos para el material (opcional)
+              Datos para el material
             </p>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -117,6 +136,7 @@ export default function RegisterPage() {
                 <input
                   type="number"
                   min={1}
+                  required
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
                   className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30"
@@ -129,6 +149,7 @@ export default function RegisterPage() {
                 <input
                   type="number"
                   min={1}
+                  required
                   value={height}
                   onChange={(e) => setHeight(e.target.value)}
                   className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30"
@@ -140,6 +161,7 @@ export default function RegisterPage() {
                 Talla de neopreno
               </label>
               <select
+                required
                 value={wetsuitSize}
                 onChange={(e) => setWetsuitSize(e.target.value)}
                 className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30"
