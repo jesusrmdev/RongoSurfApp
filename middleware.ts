@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { decrypt } from "@/lib/auth";
 
-const protectedRoutes = ["/mis-reservas", "/admin"];
+const protectedRoutes = ["/mis-reservas", "/perfil", "/admin"];
 const adminRoutes = ["/admin"];
 const publicRoutes = ["/login", "/register", "/"];
 

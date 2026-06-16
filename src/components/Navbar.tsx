@@ -60,6 +60,12 @@ export default function Navbar() {
           {user ? (
             <>
               <Link
+                href="/perfil"
+                className="hover:text-sand transition-colors"
+              >
+                Mi Perfil
+              </Link>
+              <Link
                 href="/mis-reservas"
                 className="hover:text-sand transition-colors"
               >
@@ -126,6 +132,9 @@ export default function Navbar() {
           </Link>
           {user ? (
             <>
+              <Link href="/perfil" onClick={() => setMenuOpen(false)}>
+                Mi Perfil
+              </Link>
               <Link href="/mis-reservas" onClick={() => setMenuOpen(false)}>
                 Mis Reservas
               </Link>

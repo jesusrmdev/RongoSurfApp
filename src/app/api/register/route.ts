@@ -15,6 +15,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!/^\d{9}$/.test(phone)) {
+      return NextResponse.json(
+        { error: "Teléfono no válido (debe tener 9 dígitos)" },
+        { status: 400 }
+      );
+    }
+
     if (password.length < 8) {
       return NextResponse.json(
         { error: "La contraseña debe tener al menos 8 caracteres" },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 type Session = {
@@ -28,6 +28,19 @@ export default function BookForm({
     text: string;
     error: boolean;
   } | null>(null);
+
+  useEffect(() => {
+    if (!isRental) return;
+    fetch("/api/profile")
+      .then((r) => r.ok ? r.json() : null)
+      .then((user) => {
+        if (user) {
+          setWeight(String(user.weight));
+          setHeight(String(user.height));
+          setWetsuitSize(user.wetsuitSize);
+        }
+      });
+  }, [isRental]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

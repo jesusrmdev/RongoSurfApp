@@ -21,6 +21,10 @@ async function main() {
       email: "admin@surfnaturemurcia.com",
       password: adminPassword,
       role: "ADMIN",
+      phone: "612345678",
+      weight: 75,
+      height: 178,
+      wetsuitSize: "L",
     },
   });
 
@@ -32,6 +36,10 @@ async function main() {
       email: "surfer@test.com",
       password: userPassword,
       role: "USER",
+      phone: "698765432",
+      weight: 70,
+      height: 170,
+      wetsuitSize: "M",
     },
   });
 
