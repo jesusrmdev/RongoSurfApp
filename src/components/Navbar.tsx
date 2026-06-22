@@ -145,45 +145,47 @@ export default function Navbar() {
         </button>
       </div>
 
-      {menuOpen && (
-        <div className="sm:hidden px-4 pb-4 flex flex-col gap-3 text-sm">
-          <Link href="/clases" onClick={() => setMenuOpen(false)}>
-            Clases
-          </Link>
-          {user ? (
-            <>
-              <Link href="/perfil" onClick={() => setMenuOpen(false)}>
-                Mi Perfil
+      <div
+        className={`sm:hidden px-4 flex flex-col gap-3 text-sm overflow-hidden transition-all duration-300 ease-in-out ${
+          menuOpen ? "max-h-64 opacity-100 pb-4" : "max-h-0 opacity-0 pb-0"
+        }`}
+      >
+        <Link href="/clases" onClick={() => setMenuOpen(false)}>
+          Clases
+        </Link>
+        {user ? (
+          <>
+            <Link href="/perfil" onClick={() => setMenuOpen(false)}>
+              Mi Perfil
+            </Link>
+            {user.role !== "ADMIN" && (
+              <Link href="/mis-reservas" onClick={() => setMenuOpen(false)}>
+                Mis Reservas
               </Link>
-              {user.role !== "ADMIN" && (
-                <Link href="/mis-reservas" onClick={() => setMenuOpen(false)}>
-                  Mis Reservas
-                </Link>
-              )}
-              {user.role === "ADMIN" && (
-                <Link href="/admin" onClick={() => setMenuOpen(false)} className="relative inline-block w-fit">
-                  Admin
-                  {newBookings > 0 && (
-                    <span className="inline-flex ml-1 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 items-center justify-center px-1">
-                      {newBookings}
-                    </span>
-                  )}
-                </Link>
-              )}
-              <button onClick={handleLogout}>Cerrar sesión</button>
-            </>
-          ) : (
-            <>
-              <Link href="/login" onClick={() => setMenuOpen(false)}>
-                Iniciar sesión
+            )}
+            {user.role === "ADMIN" && (
+              <Link href="/admin" onClick={() => setMenuOpen(false)} className="relative inline-block w-fit">
+                Admin
+                {newBookings > 0 && (
+                  <span className="inline-flex ml-1 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 items-center justify-center px-1">
+                    {newBookings}
+                  </span>
+                )}
               </Link>
-              <Link href="/register" onClick={() => setMenuOpen(false)}>
-                Registrarse
-              </Link>
-            </>
-          )}
-        </div>
-      )}
+            )}
+            <button onClick={handleLogout}>Cerrar sesión</button>
+          </>
+        ) : (
+          <>
+            <Link href="/login" onClick={() => setMenuOpen(false)}>
+              Iniciar sesión
+            </Link>
+            <Link href="/register" onClick={() => setMenuOpen(false)}>
+              Registrarse
+            </Link>
+          </>
+        )}
+      </div>
     </nav>
   );
 }
