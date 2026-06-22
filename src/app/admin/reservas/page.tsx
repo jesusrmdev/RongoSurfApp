@@ -60,67 +60,96 @@ function formatDate(date: Date) {
 export default async function AdminBookingsPage() {
   await requireAdmin();
   const bookings = await getBookings();
+  const now = new Date();
+
+  const futureBookings = bookings.filter((b) => new Date(b.session.date) >= now);
+  const pastBookings = bookings.filter((b) => new Date(b.session.date) < now);
+
+  function BookingCard({ b }: { b: BookingWithRelations }) {
+    return (
+      <div
+        className={`border rounded-lg p-4 ${
+          b.status === "CANCELLED"
+            ? "border-red-200 bg-red-50/30"
+            : "border-sand-dark"
+        }`}
+      >
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div>
+            <p className="font-semibold text-navy text-sm">
+              {b.session.class.title}
+            </p>
+            <p className="text-xs text-muted mt-0.5">
+              {formatDate(b.session.date)} — {b.session.time}
+            </p>
+            <p className="text-xs text-muted mt-0.5">
+              {b.user.name} {b.user.apellido1} {b.user.apellido2}
+            </p>
+            <p className="text-xs text-muted mt-0.5">
+              {b.user.email} · {b.user.phone}
+            </p>
+            <p className="text-xs text-muted mt-0.5">
+              {b.user.weight}kg · {b.user.height}cm · Neopreno: {b.user.wetsuitSize}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span
+              className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                b.status === "CONFIRMED"
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-600"
+              }`}
+            >
+              {b.status === "CONFIRMED" ? "Confirmada" : "Cancelada"}
+            </span>
+            {b.status === "CONFIRMED" && (
+              <CancelBookingButton bookingId={b.id} />
+            )}
+            <DeleteBookingButton bookingId={b.id} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <h1 className="text-2xl font-bold text-navy">Todas las Reservas</h1>
       <p className="text-muted mt-1">
-        {bookings.length} reserva{bookings.length > 1 ? "s" : ""}
+        {bookings.length} reserva{bookings.length > 1 ? "s" : ""} en total
       </p>
 
-      <div className="mt-6 grid gap-3">
-        {bookings.map((b) => (
-          <div
-            key={b.id}
-            className={`border rounded-lg p-4 ${
-              b.status === "CANCELLED"
-                ? "border-red-200 bg-red-50/30"
-                : "border-sand-dark"
-            }`}
-          >
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-              <div>
-                <p className="font-semibold text-navy text-sm">
-                  {b.session.class.title}
-                </p>
-                <p className="text-xs text-muted mt-0.5">
-                  {formatDate(b.session.date)} — {b.session.time}
-                </p>
-                <p className="text-xs text-muted mt-0.5">
-                  {b.user.name} {b.user.apellido1} {b.user.apellido2}
-                </p>
-                <p className="text-xs text-muted mt-0.5">
-                  {b.user.email} · {b.user.phone}
-                </p>
-                <p className="text-xs text-muted mt-0.5">
-                  {b.user.weight}kg · {b.user.height}cm · Neopreno: {b.user.wetsuitSize}
-                </p>
-              </div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span
-                  className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                    b.status === "CONFIRMED"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-600"
-                  }`}
-                >
-                  {b.status === "CONFIRMED" ? "Confirmada" : "Cancelada"}
-                </span>
-                {b.status === "CONFIRMED" && (
-                  <CancelBookingButton bookingId={b.id} />
-                )}
-                <DeleteBookingButton bookingId={b.id} />
-              </div>
-            </div>
-          </div>
-        ))}
-
-        {bookings.length === 0 && (
-          <p className="text-center text-muted py-12">
-            No hay reservas todavía.
-          </p>
-        )}
+      <div className="mt-8">
+        <h2 className="text-lg font-semibold text-navy mb-1">
+          Próximas reservas
+        </h2>
+        <p className="text-xs text-muted mb-4">
+          {futureBookings.length} reserva{futureBookings.length !== 1 ? "s" : ""} pendiente{futureBookings.length !== 1 ? "s" : ""}
+        </p>
+        <div className="grid gap-3">
+          {futureBookings.length === 0 ? (
+            <p className="text-muted text-center py-8 text-sm">
+              No hay reservas próximas.
+            </p>
+          ) : (
+            futureBookings.map((b) => <BookingCard key={b.id} b={b} />)
+          )}
+        </div>
       </div>
+
+      {pastBookings.length > 0 && (
+        <div className="mt-10">
+          <h2 className="text-lg font-semibold text-navy mb-1">
+            Reservas pasadas
+          </h2>
+          <p className="text-xs text-muted mb-4">
+            {pastBookings.length} reserva{pastBookings.length !== 1 ? "s" : ""} pasada{pastBookings.length !== 1 ? "s" : ""}
+          </p>
+          <div className="grid gap-3">
+            {pastBookings.map((b) => <BookingCard key={b.id} b={b} />)}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
