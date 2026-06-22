@@ -5,6 +5,8 @@ import Link from "next/link";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
+  const [apellido1, setApellido1] = useState("");
+  const [apellido2, setApellido2] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [weight, setWeight] = useState("");
@@ -23,7 +25,7 @@ export default function RegisterPage() {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, phone, weight, height, wetsuitSize }),
+        body: JSON.stringify({ name, apellido1, apellido2, email, password, phone, weight, height, wetsuitSize }),
       });
 
       if (!res.ok) {
@@ -66,6 +68,42 @@ export default function RegisterPage() {
               onChange={(e) => setName(e.target.value)}
               className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30 focus:border-ocean"
               placeholder="Tu nombre"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="apellido1"
+              className="block text-sm font-medium text-navy mb-1"
+            >
+              Primer apellido
+            </label>
+            <input
+              id="apellido1"
+              type="text"
+              required
+              value={apellido1}
+              onChange={(e) => setApellido1(e.target.value)}
+              className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30 focus:border-ocean"
+              placeholder="Tu primer apellido"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="apellido2"
+              className="block text-sm font-medium text-navy mb-1"
+            >
+              Segundo apellido
+            </label>
+            <input
+              id="apellido2"
+              type="text"
+              required
+              value={apellido2}
+              onChange={(e) => setApellido2(e.target.value)}
+              className="w-full px-3 py-2 border border-sand-dark rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ocean/30 focus:border-ocean"
+              placeholder="Tu segundo apellido"
             />
           </div>
 

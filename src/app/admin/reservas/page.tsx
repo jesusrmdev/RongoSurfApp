@@ -15,7 +15,7 @@ type BookingWithRelations = {
   wetsuitSize: string | null;
   status: string;
   createdAt: Date;
-  user: { id: string; name: string; email: string; phone: string; weight: number; height: number; wetsuitSize: string };
+  user: { id: string; name: string; apellido1: string; apellido2: string; email: string; phone: string; weight: number; height: number; wetsuitSize: string };
   session: {
     id: string;
     classId: string;
@@ -39,7 +39,7 @@ type BookingWithRelations = {
 async function getBookings(): Promise<BookingWithRelations[]> {
   return prisma.booking.findMany({
     include: {
-      user: { select: { id: true, name: true, email: true, phone: true, weight: true, height: true, wetsuitSize: true } },
+      user: { select: { id: true, name: true, apellido1: true, apellido2: true, email: true, phone: true, weight: true, height: true, wetsuitSize: true } },
       session: {
         include: { class: true },
       },
@@ -87,7 +87,7 @@ export default async function AdminBookingsPage() {
                   {formatDate(b.session.date)} — {b.session.time}
                 </p>
                 <p className="text-xs text-muted mt-0.5">
-                  {b.user.name}
+                  {b.user.name} {b.user.apellido1} {b.user.apellido2}
                 </p>
                 <p className="text-xs text-muted mt-0.5">
                   {b.user.email} · {b.user.phone}

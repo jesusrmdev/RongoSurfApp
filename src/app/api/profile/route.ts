@@ -11,7 +11,7 @@ export async function GET() {
   const user = await prisma.user.findUnique({
     where: { id: session.userId },
     select: {
-      id: true, name: true, email: true, phone: true,
+      id: true, name: true, apellido1: true, apellido2: true, email: true, phone: true,
       weight: true, height: true, wetsuitSize: true, role: true,
     },
   });
@@ -30,9 +30,9 @@ export async function PATCH(request: Request) {
   }
 
   try {
-    const { name, phone, weight, height, wetsuitSize } = await request.json();
+    const { name, apellido1, apellido2, phone, weight, height, wetsuitSize } = await request.json();
 
-    if (!name || !phone || !weight || !height || !wetsuitSize) {
+    if (!name || !apellido1 || !apellido2 || !phone || !weight || !height || !wetsuitSize) {
       return NextResponse.json(
         { error: "Todos los campos son obligatorios" },
         { status: 400 }
@@ -50,13 +50,15 @@ export async function PATCH(request: Request) {
       where: { id: session.userId },
       data: {
         name,
+        apellido1,
+        apellido2,
         phone,
         weight: Math.max(0, parseInt(weight, 10)) || 0,
         height: Math.max(0, parseInt(height, 10)) || 0,
         wetsuitSize,
       },
       select: {
-        id: true, name: true, email: true, phone: true,
+        id: true, name: true, apellido1: true, apellido2: true, email: true, phone: true,
         weight: true, height: true, wetsuitSize: true, role: true,
       },
     });

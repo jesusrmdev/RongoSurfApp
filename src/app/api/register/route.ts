@@ -5,10 +5,10 @@ import { createSession } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
-    const { name, email, password, phone, weight, height, wetsuitSize } =
+    const { name, apellido1, apellido2, email, password, phone, weight, height, wetsuitSize } =
       await request.json();
 
-    if (!name || !email || !password || !phone || !weight || !height || !wetsuitSize) {
+    if (!name || !apellido1 || !apellido2 || !email || !password || !phone || !weight || !height || !wetsuitSize) {
       return NextResponse.json(
         { error: "Todos los campos son obligatorios" },
         { status: 400 }
@@ -48,6 +48,8 @@ export async function POST(request: Request) {
     const user = await prisma.user.create({
       data: {
         name,
+        apellido1,
+        apellido2,
         email,
         password: hashedPassword,
         phone,

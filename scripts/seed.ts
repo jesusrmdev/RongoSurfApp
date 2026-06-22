@@ -18,6 +18,8 @@ async function main() {
     update: {},
     create: {
       name: "Admin SurfNature",
+      apellido1: "Admin",
+      apellido2: "SurfNature",
       email: "admin@surfnaturemurcia.com",
       password: adminPassword,
       role: "ADMIN",
@@ -33,6 +35,8 @@ async function main() {
     update: {},
     create: {
       name: "Surfer Test",
+      apellido1: "Surfer",
+      apellido2: "Test",
       email: "surfer@test.com",
       password: userPassword,
       role: "USER",

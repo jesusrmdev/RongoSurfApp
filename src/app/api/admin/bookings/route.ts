@@ -9,7 +9,7 @@ export async function GET() {
   try {
     const bookings = await prisma.booking.findMany({
       include: {
-        user: { select: { id: true, name: true, email: true } },
+        user: { select: { id: true, name: true, apellido1: true, apellido2: true, email: true } },
         session: {
           include: { class: true },
         },
