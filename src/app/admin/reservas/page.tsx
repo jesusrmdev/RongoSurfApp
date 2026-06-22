@@ -78,7 +78,7 @@ export default async function AdminBookingsPage() {
                 : "border-sand-dark"
             }`}
           >
-            <div className="flex items-start justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
               <div>
                 <p className="font-semibold text-navy text-sm">
                   {b.session.class.title}
@@ -96,7 +96,7 @@ export default async function AdminBookingsPage() {
                   {b.user.weight}kg · {b.user.height}cm · Neopreno: {b.user.wetsuitSize}
                 </p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span
                   className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                     b.status === "CONFIRMED"
