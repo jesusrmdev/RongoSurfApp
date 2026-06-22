@@ -11,10 +11,12 @@ export default function DeleteBookingButton({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState("");
 
   const handleDelete = async () => {
     setShowModal(false);
     setLoading(true);
+    setError("");
 
     try {
       const res = await fetch(`/api/admin/bookings/${bookingId}`, {
@@ -22,9 +24,12 @@ export default function DeleteBookingButton({
       });
       if (res.ok) {
         router.refresh();
+      } else {
+        const data = await res.json();
+        setError(data.error || "Error al eliminar reserva");
       }
     } catch {
-      /* ignore */
+      setError("Error de conexión");
     } finally {
       setLoading(false);
     }
@@ -39,6 +44,8 @@ export default function DeleteBookingButton({
       >
         {loading ? "..." : "Eliminar"}
       </button>
+
+      {error && <p className="text-xs text-red-500 mt-1 mb-2">{error}</p>}
 
       {showModal && (
         <div
