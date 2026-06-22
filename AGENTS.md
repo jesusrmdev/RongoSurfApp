@@ -63,7 +63,7 @@ Live at https://surf-nature-murcia.vercel.app
 
 ### Cancel Buttons
 - Both admin (`CancelBookingButton.tsx`) and user (`CancelButton.tsx`) use custom modal instead of native `confirm()`
-- User cancel: DELETE `/api/bookings/[id]` (hard delete)
+- User cancel: PATCH `/api/bookings/[id]` → "CANCELLED" (soft cancel)
 - Admin cancel: PATCH `/api/admin/bookings/[id]` → "CANCELLED"
 
 ### Seed (`scripts/seed.ts`)
