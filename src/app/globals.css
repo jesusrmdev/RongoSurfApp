@@ -19,3 +19,14 @@ body {
   color: var(--color-foreground);
   font-family: var(--font-sans, Arial, Helvetica, sans-serif);
 }
+
+@keyframes wave {
+  0%, 100% {
+    transform: scaleY(0.3);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
