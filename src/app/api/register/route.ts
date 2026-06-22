@@ -51,8 +51,8 @@ export async function POST(request: Request) {
         email,
         password: hashedPassword,
         phone,
-        weight: parseInt(weight, 10),
-        height: parseInt(height, 10),
+        weight: Math.max(0, parseInt(weight, 10)) || 0,
+        height: Math.max(0, parseInt(height, 10)) || 0,
         wetsuitSize,
       },
     });
