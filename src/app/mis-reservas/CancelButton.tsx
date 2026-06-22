@@ -19,7 +19,7 @@ export default function CancelButton({
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`/api/bookings/${bookingId}`, { method: "DELETE" });
+      const res = await fetch(`/api/bookings/${bookingId}`, { method: "PATCH" });
       if (res.ok) {
         setSuccess("✓ Cancelada");
         setTimeout(() => router.refresh(), 1500);
