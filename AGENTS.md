@@ -41,7 +41,7 @@ Live at https://surf-nature-murcia.vercel.app
 - Math.max(0, ...) guards on all weight/height parsing (register, profile, admin)
 
 ### Registration (last updated: Jun 2026)
-- `phone`, `weight`, `height`, `wetsuitSize` are REQUIRED on register
+- `name`, `apellido1`, `apellido2`, `phone`, `weight`, `height`, `wetsuitSize` are REQUIRED on register
 - Phone validated: exactly 9 digits (`/^\d{9}$/`)
 - `weight`/`height` stored as Int, `wetsuitSize` as String (XS-XXL)
 - All required fields validated server-side (400 if missing)
@@ -72,13 +72,13 @@ Live at https://surf-nature-murcia.vercel.app
 - Admin cancel: PATCH `/api/admin/bookings/[id]` → "CANCELLED"
 
 ### Seed (`scripts/seed.ts`)
-- Admin: `admin@surfnaturemurcia.com` / `admin123` — phone: 612345678, 75kg, 178cm, L
-- User: `surfer@test.com` / `surf123` — phone: 698765432, 70kg, 170cm, M
+- Admin: `admin@surfnaturemurcia.com` / `admin123` — apellidos: Admin SurfNature, phone: 612345678, 75kg, 178cm, L
+- User: `surfer@test.com` / `surf123` — apellidos: Surfer Test, phone: 698765432, 70kg, 170cm, M
 - Uses bcrypt 12 rounds (consistent with register)
 
 ## Key Files
 - `src/lib/auth.ts` — JWT create/verify/session management
-- `src/lib/dal.ts` — Data access layer with auth helpers (`getCurrentUser` includes phone/weight/height/wetsuitSize; `requireAdmin` has null-check on session)
+- `src/lib/dal.ts` — Data access layer with auth helpers (`getCurrentUser` includes phone/weight/height/wetsuitSize/apellidos; `requireAdmin` has null-check on session)
 - `src/lib/prisma.ts` — Prisma client singleton (Neon adapter)
 - `middleware.ts` — Auth guard + security headers (protects /perfil)
 - `src/app/api/bookings/route.ts` — Booking creation with $transaction

@@ -8,6 +8,8 @@ import Image from "next/image";
 type User = {
   id: string;
   name: string;
+  apellido1: string;
+  apellido2: string;
   email: string;
   role: string;
 };
@@ -99,7 +101,7 @@ export default function Navbar() {
                   )}
                 </Link>
               )}
-              <span className="text-sand/60">{user.name}</span>
+              <span className="text-sand/60">{user.name} {user.apellido1} {user.apellido2}</span>
               <button
                 onClick={handleLogout}
                 className="text-sm hover:text-sand transition-colors"
