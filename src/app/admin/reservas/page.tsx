@@ -116,7 +116,7 @@ export default async function AdminBookingsPage() {
     <div className="max-w-4xl mx-auto px-4 py-12">
       <h1 className="text-2xl font-bold text-navy">Todas las Reservas</h1>
       <p className="text-muted mt-1">
-        {bookings.length} reserva{bookings.length > 1 ? "s" : ""} en total
+        {bookings.length} reserva{bookings.length !== 1 ? "s" : ""} en total · {futureBookings.length} pendiente{futureBookings.length !== 1 ? "s" : ""}
       </p>
 
       <div className="mt-8">
