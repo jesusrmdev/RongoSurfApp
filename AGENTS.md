@@ -18,7 +18,7 @@ Live at https://surf-nature-murcia.vercel.app
 - Auth: JWT in httpOnly cookie, 7-day expiry, bcrypt(12) for passwords.
 - Participants always 1 (each user books for themselves).
 
-## Current State (v1.0.0 - Production)
+## Current State (v1.1.0 - Production)
 - All forms show success/error messages before reload or router.refresh()
 - Mobile menu closes on outside click
 - Error boundary (error.tsx), loading state (loading.tsx), custom 404 (not-found.tsx)
@@ -34,6 +34,11 @@ Live at https://surf-nature-murcia.vercel.app
 - Password minLength on client matches server (8)
 - No dead code or unused imports
 - Capacity error message: "No quedan plazas disponibles para la sesión seleccionada"
+- User cancel: PATCH `/api/bookings/[id]` → "CANCELLED" (soft cancel, consistent with admin)
+- Error feedback on all delete/cancel buttons (no silent error swallowing)
+- HTML5 pattern validation on phone input (`pattern="\d{9}"`)
+- All confirmation buttons use custom modals (no native `confirm()` anywhere)
+- Math.max(0, ...) guards on all weight/height parsing (register, profile, admin)
 
 ### Registration (last updated: Jun 2026)
 - `phone`, `weight`, `height`, `wetsuitSize` are REQUIRED on register
@@ -90,13 +95,14 @@ Live at https://surf-nature-murcia.vercel.app
 
 ## Recent Commits (latest first)
 ```
+01da66a fix: add HTML5 pattern validation on phone input in register
+fd186ae fix: add error feedback to DeleteBookingButton
+c429b42 fix: add Math.max guards on weight/height in register and profile routes
+6364161 fix: change user cancel from DELETE to PATCH for consistent soft cancel
+04d4544 fix: replace native confirm() with custom modal in SessionsManager
 6d847bf Badge admin solo cuenta reservas activas (no canceladas)
 3d3406b Añadir badge de nuevas reservas en navbar para admin
 578fe87 Ocultar Mis Reservas en navbar para admin
 a97083f Añadir opción de eliminar reserva en panel admin
 fe5a6cd Fix: catch message en register, null-check requireAdmin, bcrypt rounds 12, .catch() en BookForm
-1a268cf Mejoras: perfil usuario, seed actualizado, validación teléfono, auto-prefill en reservas, loading admin, modal confirmación cancelar
-267cdd3 Mostrar info completa del usuario (email, teléfono, peso, altura, neopreno) en panel admin de reservas
-3b00e15 Cambiar etiqueta a (obligatorio) y mejorar mensaje de error en registro
-5704cd8 Hacer peso/altura/neopreno obligatorios en registro y añadir teléfono móvil
 ```
