@@ -22,6 +22,7 @@ export default function SessionsManager({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,12 +53,17 @@ export default function SessionsManager({
     }
   };
 
-  const handleDelete = async (sessionId: string) => {
-    if (!confirm("¿Eliminar esta sesión?")) return;
+  const handleDelete = (sessionId: string) => {
+    setDeletingId(sessionId);
+  };
+
+  const confirmDelete = async () => {
+    if (!deletingId) return;
+    setDeletingId(null);
     setError("");
     setSuccess("");
     try {
-      const res = await fetch(`/api/admin/sessions/${sessionId}`, {
+      const res = await fetch(`/api/admin/sessions/${deletingId}`, {
         method: "DELETE",
       });
       if (res.ok) {
@@ -142,6 +148,39 @@ export default function SessionsManager({
           Añadir
         </button>
       </form>
+
+      {deletingId && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          onClick={() => setDeletingId(null)}
+        >
+          <div
+            className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="text-sm text-navy font-medium">
+              ¿Eliminar esta sesión?
+            </p>
+            <p className="text-xs text-muted mt-1">
+              Esta acción no se puede deshacer.
+            </p>
+            <div className="flex gap-2 mt-4 justify-end">
+              <button
+                onClick={() => setDeletingId(null)}
+                className="px-3 py-1.5 text-sm text-muted border border-sand-dark rounded-md hover:bg-sand/30"
+              >
+                Volver
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-3 py-1.5 text-sm text-white bg-red-500 rounded-md hover:bg-red-600"
+              >
+                Eliminar sesión
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
