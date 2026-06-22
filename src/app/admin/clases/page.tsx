@@ -53,12 +53,12 @@ export default async function AdminClassesPage() {
         {classes.map((cls) => (
           <div
             key={cls.id}
-            className={`border rounded-lg p-4 flex items-center justify-between ${
+            className={`border rounded-lg p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 ${
               cls.isActive ? "border-sand-dark" : "border-red-200 bg-red-50/30"
             }`}
           >
             <div>
-              <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="font-semibold text-navy">{cls.title}</h2>
                 <span className="text-xs text-muted">
                   {cls.type === "INDIVIDUAL" ? "Individual" : "Grupal"}
