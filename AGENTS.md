@@ -1,4 +1,4 @@
-# RongoSurfApp — Surf Nature Murcia
+# rongo-surf-app — Surf Nature Murcia
 
 ## Project
 Surf school booking platform. Next.js 16 + Prisma + Neon PostgreSQL + Tailwind v4.
@@ -76,6 +76,24 @@ Live at https://surf-nature-murcia.vercel.app
 - User: `surfer@test.com` / `surf123` — apellidos: Surfer Test, phone: 698765432, 70kg, 170cm, M
 - Uses bcrypt 12 rounds (consistent with register)
 
+## Testing
+- **Framework:** Vitest v4.1.9
+- **Run:** `npm test` (single run) or `npm run test:watch`
+- **33 tests** across 6 files, ~1.3s
+- **Database mock:** Prisma is mocked globally in `src/lib/__tests__/vitest.setup.ts` — all methods return `vi.fn()` so tests never connect to Neon
+- **Per-test auth mock:** each test file mocks `@/lib/auth` with `vi.mock()` to control `getSession()` / `createSession()` per test case
+- **Pattern:** create a `Request` object and call the route handler directly (e.g. `POST(createRequest(body))`), assert on `res.status` and `res.json()`
+
+### Test files
+| File | Tests | What it covers |
+|---|---|---|
+| `src/lib/__tests__/auth.test.ts` | 5 | JWT encrypt/decrypt, invalid token, empty/undefined, wrong secret |
+| `src/lib/__tests__/utils.test.ts` | 3 | formatDuration helper (minutes → "Xh Ymin") |
+| `src/app/api/__tests__/bookings.test.ts` | 8 | POST /api/bookings: auth guard, missing sessionId, session not found, session inactive, GROUP booking success, duplicate booking (409), capacity exceeded (409), RENTAL with weight/height/wetsuit (201) |
+| `src/app/api/__tests__/register.test.ts` | 6 | POST /api/register: missing fields, phone 9 digits, password min 8, invalid email, duplicate email (409), success + session creation |
+| `src/app/api/__tests__/profile.test.ts` | 7 | GET /api/profile (401, 404, success), PATCH /api/profile (401, missing fields, invalid phone, success with update) |
+| `src/app/api/bookings/__tests__/cancel.test.ts` | 4 | PATCH /api/bookings/[id]: 401, 404, 403 (wrong user), successful cancel |
+
 ## Key Files
 - `src/lib/auth.ts` — JWT create/verify/session management
 - `src/lib/dal.ts` — Data access layer with auth helpers (`getCurrentUser` includes phone/weight/height/wetsuitSize/apellidos; `requireAdmin` has null-check on session)
@@ -92,9 +110,15 @@ Live at https://surf-nature-murcia.vercel.app
 - `src/app/mis-reservas/CancelButton.tsx` — User cancel (modal)
 - `src/app/clases/[id]/BookForm.tsx` — Booking form (pre-fills from profile)
 - `prisma/schema.prisma` — Database schema (do not modify without asking)
+- `src/lib/__tests__/vitest.setup.ts` — Global Prisma mock for tests
+- `src/app/api/__tests__/bookings.test.ts` — 8 tests for POST /api/bookings
+- `src/app/api/__tests__/register.test.ts` — 6 tests for POST /api/register
+- `src/app/api/__tests__/profile.test.ts` — 7 tests for GET/PATCH /api/profile
+- `src/app/api/bookings/__tests__/cancel.test.ts` — 4 tests for PATCH /api/bookings/[id]
 
 ## Recent Commits (latest first)
 ```
+(NEW) test: mock Prisma and add 25 API route tests (bookings, register, profile, cancel)
 01da66a fix: add HTML5 pattern validation on phone input in register
 fd186ae fix: add error feedback to DeleteBookingButton
 c429b42 fix: add Math.max guards on weight/height in register and profile routes

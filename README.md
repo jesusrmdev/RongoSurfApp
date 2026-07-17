@@ -140,8 +140,8 @@ JWT-based authentication stored in HTTP-only cookies:
 
 ```bash
 # Clone
-git clone https://github.com/jesusrmdev/RongoSurfApp.git
-cd RongoSurfApp
+git clone https://github.com/jesusrmdev/rongo-surf-app.git
+cd rongo-surf-app
 
 # Install dependencies
 npm install
