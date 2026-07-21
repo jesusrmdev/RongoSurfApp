@@ -32,6 +32,16 @@ export default async function AdminDashboard() {
             Revisa y gestiona todas las reservas
           </p>
         </Link>
+
+        <Link
+          href="/admin/alumnos"
+          className="border border-sand-dark rounded-lg p-6 hover:border-ocean/30 transition-colors"
+        >
+          <h2 className="font-semibold text-navy">Alumnos</h2>
+          <p className="text-sm text-muted mt-1">
+            Lista de todos los alumnos registrados
+          </p>
+        </Link>
       </div>
     </div>
   );
