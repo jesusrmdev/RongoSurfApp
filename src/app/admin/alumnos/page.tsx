@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/dal";
+import DeleteUserButton from "./DeleteUserButton";
+import EditUserButton from "./EditUserButton";
 
 export const dynamic = "force-dynamic";
 
@@ -73,7 +75,8 @@ export default async function AdminAlumnosPage() {
               <th className="py-3 pr-4 font-medium">Altura</th>
               <th className="py-3 pr-4 font-medium">Neopreno</th>
               <th className="py-3 pr-4 font-medium">Reservas</th>
-              <th className="py-3 font-medium">Registro</th>
+              <th className="py-3 pr-4 font-medium">Registro</th>
+              <th className="py-3 font-medium">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -95,11 +98,17 @@ export default async function AdminAlumnosPage() {
                 <td className="py-3 text-muted text-xs whitespace-nowrap">
                   {formatDate(u.createdAt)}
                 </td>
+                <td className="py-3 whitespace-nowrap">
+                  <div className="flex items-center gap-3">
+                    <EditUserButton user={u} />
+                    <DeleteUserButton userId={u.id} userName={`${u.name} ${u.apellido1}`} />
+                  </div>
+                </td>
               </tr>
             ))}
             {alumnos.length === 0 && (
               <tr>
-                <td colSpan={8} className="py-12 text-center text-muted">
+                <td colSpan={9} className="py-12 text-center text-muted">
                   No hay alumnos registrados.
                 </td>
               </tr>
@@ -131,6 +140,10 @@ export default async function AdminAlumnosPage() {
                 <span className="text-xs text-muted">
                   Desde {formatDate(u.createdAt)}
                 </span>
+              </div>
+              <div className="flex gap-3 mt-3 pt-3 border-t border-sand-dark/30">
+                <EditUserButton user={u} />
+                <DeleteUserButton userId={u.id} userName={`${u.name} ${u.apellido1}`} />
               </div>
             </div>
           ))
