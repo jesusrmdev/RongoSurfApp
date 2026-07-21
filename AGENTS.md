@@ -178,7 +178,7 @@ Si una decisión puede afectar a la arquitectura del proyecto, detenerse y consu
 - `name`, `apellido1`, `apellido2`, `phone`, `weight`, `height`, `wetsuitSize` are REQUIRED
 - Phone validated: exactly 9 digits (`/^\d{9}$/`)
 - `weight`/`height` stored as Int, `wetsuitSize` as String (XS-XXL)
-- `totalBookings` Int @default(0): contador acumulado que se incrementa al crear cada reserva y nunca se decrementa (migración con backfill desde datos existentes)
+- `totalBookings` Int @default(0): contador que se incrementa al crear cada reserva, decrementa al cancelar (antes de realizarse), y no decrementa al eliminar reservas pasadas (migración con backfill desde datos existentes)
 - All required fields validated server-side (400 if missing)
 
 ### User Profile (`/perfil`)

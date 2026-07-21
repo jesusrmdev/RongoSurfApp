@@ -21,10 +21,26 @@ export async function PATCH(
       );
     }
 
+    const existing = await prisma.booking.findUnique({
+      where: { id },
+      select: { userId: true, status: true },
+    });
+
+    if (!existing) {
+      return NextResponse.json({ error: "Reserva no encontrada" }, { status: 404 });
+    }
+
     const booking = await prisma.booking.update({
       where: { id },
       data: { status: body.status },
     });
+
+    if (existing.status !== "CANCELLED" && body.status === "CANCELLED") {
+      await prisma.user.update({
+        where: { id: existing.userId },
+        data: { totalBookings: { decrement: 1 } },
+      });
+    }
 
     return NextResponse.json(booking);
   } catch {

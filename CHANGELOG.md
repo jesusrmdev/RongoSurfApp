@@ -5,7 +5,7 @@
 ### Added
 - **Workflow y documentación del proyecto endurecidos:** Nuevas reglas permanentes en `AGENTS.md` (git flow estricto, política de migraciones, dependencias, arquitectura por capas, documentación viva, reporte de cierre obligatorio, principios generales)
 - **Sección Alumnos en panel admin:** Nueva página `/admin/alumnos` con tabla responsive de todos los alumnos registrados, incluyendo datos físicos, número de reservas y fecha de registro. Nuevo endpoint `GET /api/admin/users` protegido para admin.
-- **Contador persistente de reservas por alumno:** Nuevo campo `totalBookings` en modelo User que se incrementa al crear cada reserva y nunca decrementa. Migración con backfill de datos existentes.
+- **Contador persistente de reservas por alumno:** Nuevo campo `totalBookings` en modelo User. Se incrementa al crear cada reserva, decrementa al cancelar (antes de realizarse), y no decrementa al eliminar reservas pasadas. Migración con backfill de datos existentes.
 
 ## [1.1.0] - 2026-06-22
 
