@@ -8,62 +8,62 @@ Live at https://surf-nature-murcia.vercel.app
 
 ## 1. Git Flow
 
-- Una rama por feature/fix/docs.
-- Prefijos de rama: `feat/`, `fix/`, `docs/`.
-- Commits descriptivos en español.
-- Merge mediante `--no-ff` (prohibido hacer squash).
-- **Nada se commitea directamente a `main`** — ni siquiera documentación. Todo pasa por rama + Pull Request.
-- Tras el merge a `main`, Vercel despliega automáticamente.
+- One branch per feature/fix/docs.
+- Branch prefixes: `feat/`, `fix/`, `docs/`.
+- Descriptive commits (English).
+- Merge via `--no-ff` (squash prohibited).
+- **Never commit directly to `main`** — not even documentation. Everything goes through a branch + Pull Request.
+- After merging to `main`, Vercel auto-deploys.
 
 ---
 
 ## 2. Prisma Migrations
 
-- **No modificar `prisma/schema.prisma` sin solicitar confirmación.**
-- **No ejecutar migraciones de Prisma en producción sin aprobación explícita.**
-- Antes de cualquier migración, explicar:
-  - qué cambia,
-  - por qué cambia,
-  - qué impacto tiene,
-  - si existe riesgo de pérdida de datos.
-- Esperar siempre aprobación antes de proceder.
+- **Do not modify `prisma/schema.prisma` without asking for confirmation.**
+- **Do not run Prisma migrations in production without explicit approval.**
+- Before any migration, explain:
+  - what changes,
+  - why it changes,
+  - what impact it has,
+  - whether there is data loss risk.
+- Always wait for approval before proceeding.
 
 ---
 
-## 3. Dependencias
+## 3. Dependencies
 
-- **No instalar nuevas dependencias automáticamente.**
-- Antes de instalar cualquier paquete, justificar:
-  - por qué es necesario,
-  - tamaño aproximado,
-  - mantenimiento del proyecto,
-  - alternativas nativas disponibles,
-  - ventajas e inconvenientes.
-- Esperar siempre aprobación antes de instalar.
+- **Do not install new dependencies automatically.**
+- Before installing any package, justify:
+  - why it's needed,
+  - approximate size,
+  - project maintenance status,
+  - native alternatives available,
+  - pros and cons.
+- Always wait for approval before installing.
 
 ---
 
-## 4. Arquitectura
+## 4. Architecture
 
-Separación estricta por capas:
+Strict layer separation:
 
 ```
 React/UI
    ↓
 API Routes
    ↓
-Servicios / Lógica de negocio
+Services / Business Logic
    ↓
 Prisma
    ↓
 Neon
 ```
 
-- **Nunca** colocar lógica de negocio compleja dentro de componentes React.
-- Los componentes se encargan únicamente de: renderizado, interacción del usuario, gestión de estado de interfaz.
-- Toda la lógica debe vivir en servicios o en el backend.
+- **Never** place complex business logic inside React components.
+- Components are only responsible for: rendering, user interaction, UI state management.
+- All logic must live in services or the backend.
 
-### Mapeo actual
+### Current mapping
 - `Class` = template (title, price, type). `Session` = date/time instance of a class.
 - `Booking` connects User + Session. Rental data (weight/height/wetsuit) on Booking.
 - Auth: JWT in httpOnly cookie, 7-day expiry, bcrypt(12) for passwords.
@@ -71,83 +71,83 @@ Neon
 
 ---
 
-## 5. Documentación viva
+## 5. Living documentation
 
-Después de finalizar cualquier feature relevante, actualizar automáticamente:
+After finishing any relevant feature, automatically update:
 
-- Estado del proyecto
-- Arquitectura
-- Árbol de carpetas (si cambia)
-- Nuevos endpoints
-- Nuevos modelos Prisma
-- Variables de entorno nuevas
-- Flujo afectado
-- Tests añadidos
+- Project state
+- Architecture
+- Folder tree (if changed)
+- New endpoints
+- New Prisma models
+- New environment variables
+- Affected flow
+- Added tests
 - Changelog (`CHANGELOG.md`)
-- Próximos pasos
+- Next steps
 
-La documentación nunca debe quedarse desactualizada respecto al código.
+Documentation must never be out of sync with code.
 
 ---
 
-## 6. Reporte de cierre obligatorio
+## 6. Mandatory closing report
 
-Cuando termines una feature **NO hagas merge automáticamente**.
+When you finish a feature **DO NOT merge automatically**.
 
-Genera siempre un informe con este formato y espera aprobación:
+Always generate a report with this format and wait for approval:
 
 ```
-# Reporte de implementación
+# Implementation Report
 
-## Objetivo
+## Objective
 
-## Archivos creados
+## Files created
 
-## Archivos modificados
+## Files modified
 
-## Arquitectura afectada
+## Affected architecture
 
-## Base de datos afectada
+## Affected database
 
-## API afectada
+## Affected API
 
-## Tests añadidos
+## Added tests
 
 ## Build
 
-## Riesgos detectados
+## Detected risks
 
-## Mejoras futuras
+## Future improvements
 
-## Estado
+## Status
 ```
 
-Esperar aprobación antes de mergear.
+Wait for approval before merging.
 
 ---
 
-## 7. Principios generales
+## 7. General principles
 
-Priorizar siempre en este orden:
+Always prioritize in this order:
 
-1. **Mantenibilidad** — código legible, documentado, consistente
-2. **Simplicidad** — la solución más simple que funcione
-3. **Seguridad** — validación, auth, headers, inyección
-4. **Escalabilidad** — estructura que crezca sin reescribir
-5. **Código limpio** — sin dead code, sin imports huérfanos, sin comentarios muertos
+1. **Maintainability** — readable, documented, consistent code
+2. **Simplicity** — the simplest working solution
+3. **Security** — validation, auth, headers, injection prevention
+4. **Scalability** — structure that grows without rewrites
+5. **Clean code** — no dead code, no orphan imports, no stale comments
 
-Nunca sacrificar arquitectura por velocidad de implementación.
+Never sacrifice architecture for speed.
 
-Si una decisión puede afectar a la arquitectura del proyecto, detenerse y consultar antes de implementarla.
+If a decision may affect project architecture, stop and ask before implementing.
 
 ---
 
-## 8. Key Rules técnicas
+## 8. Technical Key Rules
 
-- API routes: usar `getSession()` de `@/lib/auth` (nunca `verifySession`)
-- Admin API routes: check manual `session.role === "ADMIN"`
-- Server components (pages): usar `verifySession()` o `requireAdmin()` de `@/lib/dal`
-- `middleware.ts` maneja protección de rutas + security headers
+- API routes: use `getSession()` from `@/lib/auth` (never `verifySession`)
+- Admin API routes: check `session.role === "ADMIN"` manually
+- Server components (pages): use `verifySession()` or `requireAdmin()` from `@/lib/dal`
+- `middleware.ts` handles route protection + security headers
 
 ---
 
@@ -178,7 +178,7 @@ Si una decisión puede afectar a la arquitectura del proyecto, detenerse y consu
 - `name`, `apellido1`, `apellido2`, `phone`, `weight`, `height`, `wetsuitSize` are REQUIRED
 - Phone validated: exactly 9 digits (`/^\d{9}$/`)
 - `weight`/`height` stored as Int, `wetsuitSize` as String (XS-XXL)
-- `totalBookings` Int @default(0): contador que se incrementa al crear cada reserva, decrementa al cancelar (antes de realizarse), y no decrementa al eliminar reservas pasadas (migración con backfill desde datos existentes)
+- `totalBookings` Int @default(0): counter incremented on booking creation, decremented on cancel (before the session), not decremented on past booking deletion (migration with backfill from existing data)
 - All required fields validated server-side (400 if missing)
 
 ### User Profile (`/perfil`)
