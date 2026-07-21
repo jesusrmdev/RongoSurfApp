@@ -151,7 +151,7 @@ Si una decisión puede afectar a la arquitectura del proyecto, detenerse y consu
 
 ---
 
-## 9. Current State (v1.1.0 - Production)
+## 9. Current State (v1.2.0 - Production)
 
 - All forms show success/error messages before reload or router.refresh()
 - Mobile menu closes on outside click
@@ -191,8 +191,9 @@ Si una decisión puede afectar a la arquitectura del proyecto, detenerse y consu
 - Admin reservations page: full user info, separated into próximas/pasadas with counts
 - Cancel booking: PATCH `/api/admin/bookings/[id]` → "CANCELLED" (modal confirmation)
 - Delete booking: DELETE `/api/admin/bookings/[id]` (hard delete, modal confirmation)
-- Admin loading states: `loading.tsx` in admin/, admin/clases/, admin/reservas/
+- Admin loading states: `loading.tsx` in admin/, admin/clases/, admin/reservas/, admin/alumnos/
 - Badge notification: navbar red badge with count of CONFIRMED bookings today, polling 30s via `GET /api/admin/notifications`
+- **Alumnos section** (`/admin/alumnos`): table with all registered users (name, email, phone, weight, height, wetsuit, booking count, registration date). Desktop table + mobile cards. API: `GET /api/admin/users` (admin-only)
 
 ### Booking Form (`/clases/[id]/BookForm.tsx`)
 - When `isRental`, auto-fills weight/height/wetsuitSize from user profile
@@ -241,8 +242,11 @@ Si una decisión puede afectar a la arquitectura del proyecto, detenerse y consu
 - `src/app/api/register/route.ts` — Registration with phone validation (9 digits)
 - `src/app/api/profile/route.ts` — User profile GET/PATCH
 - `src/app/api/admin/notifications/route.ts` — Badge count (CONFIRMED bookings today)
+- `src/app/api/admin/users/route.ts` — List all users (admin-only)
 - `src/app/perfil/page.tsx` — Profile page (client component)
 - `src/app/admin/` — Admin panel pages
+- `src/app/admin/alumnos/page.tsx` — Alumnos list (table + mobile cards)
+- `src/app/admin/alumnos/loading.tsx` — Skeleton for alumnos
 - `src/app/admin/reservas/CancelBookingButton.tsx` — Admin cancel (modal)
 - `src/app/admin/reservas/DeleteBookingButton.tsx` — Admin hard delete (modal)
 - `src/app/mis-reservas/CancelButton.tsx` — User cancel (modal)

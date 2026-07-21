@@ -4,6 +4,7 @@
 
 ### Added
 - **Workflow y documentación del proyecto endurecidos:** Nuevas reglas permanentes en `AGENTS.md` (git flow estricto, política de migraciones, dependencias, arquitectura por capas, documentación viva, reporte de cierre obligatorio, principios generales)
+- **Sección Alumnos en panel admin:** Nueva página `/admin/alumnos` con tabla responsive de todos los alumnos registrados, incluyendo datos físicos, número de reservas y fecha de registro. Nuevo endpoint `GET /api/admin/users` protegido para admin.
 
 ## [1.1.0] - 2026-06-22
 
