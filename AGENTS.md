@@ -4,6 +4,14 @@
 Surf school booking platform. Next.js 16 + Prisma + Neon PostgreSQL + Tailwind v4.
 Live at https://surf-nature-murcia.vercel.app
 
+## Workflow
+- Cada nueva funcionalidad o fix se desarrolla en una rama independiente desde `main`
+- Nombre de rama: `feat/descripcion-breve` o `fix/descripcion-breve`
+- Se realizan los commits necesarios en esa rama con mensajes descriptivos en español
+- Una vez implementado y verificado (build + tests pasan), se abre un Pull Request a `main`
+- Tras el merge a `main`, Vercel despliega automáticamente
+- No se commitea directamente a `main` excepto para documentación o cambios urgentes
+
 ## Key Rules
 - Do NOT modify `prisma/schema.prisma` without asking
 - Do NOT modify `.env` or database credentials
