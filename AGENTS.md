@@ -76,8 +76,12 @@ Neon
 
 After finishing any relevant feature, automatically update:
 
-- Project state
-- Architecture
+- `ARCHITECTURE.md` (root) — high-level architecture, flows, diagrams
+- `docs/API.md` — every API endpoint (URL, method, auth, body, response, errors)
+- `docs/DATABASE.md` — every Prisma model, fields, relations, constraints
+- `docs/SECURITY.md` — security architecture and checklist
+- `docs/adr/` — create a new ADR file for any architectural decision
+- Project state (in `AGENTS.md` section 9)
 - Folder tree (if changed)
 - New endpoints
 - New Prisma models
@@ -88,6 +92,13 @@ After finishing any relevant feature, automatically update:
 - Next steps
 
 Documentation must never be out of sync with code.
+
+Reference documents:
+- `ARCHITECTURE.md` — root-level, comprehensive architecture
+- `docs/API.md` — all API routes documented
+- `docs/DATABASE.md` — database schema and models
+- `docs/SECURITY.md` — security checklist
+- `docs/adr/` — Architecture Decision Records
 
 ---
 
