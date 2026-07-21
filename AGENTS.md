@@ -178,6 +178,7 @@ Si una decisión puede afectar a la arquitectura del proyecto, detenerse y consu
 - `name`, `apellido1`, `apellido2`, `phone`, `weight`, `height`, `wetsuitSize` are REQUIRED
 - Phone validated: exactly 9 digits (`/^\d{9}$/`)
 - `weight`/`height` stored as Int, `wetsuitSize` as String (XS-XXL)
+- `totalBookings` Int @default(0): contador que se incrementa al crear cada reserva, decrementa al cancelar (antes de realizarse), y no decrementa al eliminar reservas pasadas (migración con backfill desde datos existentes)
 - All required fields validated server-side (400 if missing)
 
 ### User Profile (`/perfil`)
@@ -193,7 +194,7 @@ Si una decisión puede afectar a la arquitectura del proyecto, detenerse y consu
 - Delete booking: DELETE `/api/admin/bookings/[id]` (hard delete, modal confirmation)
 - Admin loading states: `loading.tsx` in admin/, admin/clases/, admin/reservas/, admin/alumnos/
 - Badge notification: navbar red badge with count of CONFIRMED bookings today, polling 30s via `GET /api/admin/notifications`
-- **Alumnos section** (`/admin/alumnos`): table with all registered users (name, email, phone, weight, height, wetsuit, booking count, registration date). Desktop table + mobile cards. API: `GET /api/admin/users` (admin-only)
+- **Alumnos section** (`/admin/alumnos`): table with all registered users (name, email, phone, weight, height, wetsuit, totalBookings, registration date). Desktop table + mobile cards. API: `GET /api/admin/users` (admin-only)
 
 ### Booking Form (`/clases/[id]/BookForm.tsx`)
 - When `isRental`, auto-fills weight/height/wetsuitSize from user profile

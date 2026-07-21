@@ -50,7 +50,11 @@ describe("PATCH /api/bookings/[id]", () => {
       id: "booking-1",
       userId: "user-1",
     });
-    vi.mocked(prisma.booking.update as Mock).mockResolvedValue({});
+    vi.mocked(prisma.$transaction as Mock).mockImplementation(
+      async (queries: unknown[]) => Promise.all(queries.map((q: any) => q))
+    );
+    vi.mocked(prisma.booking.update as Mock).mockResolvedValue({ id: "booking-1", status: "CANCELLED" });
+    vi.mocked(prisma.user.update as Mock).mockResolvedValue({});
 
     const res = await patch("booking-1");
     expect(res.status).toBe(200);
@@ -58,6 +62,10 @@ describe("PATCH /api/bookings/[id]", () => {
     expect(prisma.booking.update).toHaveBeenCalledWith({
       where: { id: "booking-1" },
       data: { status: "CANCELLED" },
+    });
+    expect(prisma.user.update).toHaveBeenCalledWith({
+      where: { id: "user-1" },
+      data: { totalBookings: { decrement: 1 } },
     });
   });
 });

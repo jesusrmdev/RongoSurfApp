@@ -31,10 +31,16 @@ export async function PATCH(
       );
     }
 
-    await prisma.booking.update({
-      where: { id },
-      data: { status: "CANCELLED" },
-    });
+    const [cancelled] = await prisma.$transaction([
+      prisma.booking.update({
+        where: { id },
+        data: { status: "CANCELLED" },
+      }),
+      prisma.user.update({
+        where: { id: booking.userId },
+        data: { totalBookings: { decrement: 1 } },
+      }),
+    ]);
 
     return NextResponse.json({ success: true });
   } catch {

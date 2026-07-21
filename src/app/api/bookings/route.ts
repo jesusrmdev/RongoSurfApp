@@ -56,41 +56,46 @@ export async function POST(request: Request) {
 
     const isRental = classSession.class.type === "RENTAL";
 
-    const [booking] = await prisma.$transaction(async (tx) => {
-      const existing = await tx.booking.findFirst({
-        where: { userId: session.userId, sessionId, status: "CONFIRMED" },
-      });
-
-      if (existing) throw new Error("DUPLICATE_BOOKING");
-
-      if (!isRental) {
-        const confirmed = await tx.booking.aggregate({
-          where: { sessionId, status: "CONFIRMED" },
-          _sum: { participants: true },
+      const [booking] = await prisma.$transaction(async (tx) => {
+        const existing = await tx.booking.findFirst({
+          where: { userId: session.userId, sessionId, status: "CONFIRMED" },
         });
 
-        const currentBookings = confirmed._sum.participants || 0;
-        if (currentBookings + 1 > classSession.class.capacity) {
-          throw new Error("CAPACITY_EXCEEDED");
+        if (existing) throw new Error("DUPLICATE_BOOKING");
+
+        if (!isRental) {
+          const confirmed = await tx.booking.aggregate({
+            where: { sessionId, status: "CONFIRMED" },
+            _sum: { participants: true },
+          });
+
+          const currentBookings = confirmed._sum.participants || 0;
+          if (currentBookings + 1 > classSession.class.capacity) {
+            throw new Error("CAPACITY_EXCEEDED");
+          }
         }
-      }
 
-      const created = await tx.booking.create({
-        data: {
-          userId: session.userId,
-          sessionId,
-          participants: 1,
-          weight: isRental && weight ? parseInt(weight, 10) || null : null,
-          height: isRental && height ? parseInt(height, 10) || null : null,
-          wetsuitSize: isRental ? wetsuitSize : null,
-        },
-        include: {
-          session: { include: { class: true } },
-        },
+        const created = await tx.booking.create({
+          data: {
+            userId: session.userId,
+            sessionId,
+            participants: 1,
+            weight: isRental && weight ? parseInt(weight, 10) || null : null,
+            height: isRental && height ? parseInt(height, 10) || null : null,
+            wetsuitSize: isRental ? wetsuitSize : null,
+          },
+          include: {
+            session: { include: { class: true } },
+          },
+        });
+
+        await tx.user.update({
+          where: { id: session.userId },
+          data: { totalBookings: { increment: 1 } },
+        });
+
+        return [created];
       });
-
-      return [created];
-    });
 
     return NextResponse.json(booking, { status: 201 });
   } catch (err) {

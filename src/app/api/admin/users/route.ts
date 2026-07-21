@@ -20,8 +20,8 @@ export async function GET() {
       height: true,
       wetsuitSize: true,
       role: true,
+      totalBookings: true,
       createdAt: true,
-      _count: { select: { bookings: true } },
     },
     orderBy: { createdAt: "desc" },
   });

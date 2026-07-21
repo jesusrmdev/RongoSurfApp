@@ -35,6 +35,9 @@ beforeEach(() => {
         aggregate: vi.fn(),
         create: vi.fn(),
       },
+      user: {
+        update: vi.fn(),
+      },
     }) as Promise<unknown>;
   });
 });
@@ -95,6 +98,9 @@ describe("POST /api/bookings", () => {
           aggregate: vi.fn().mockResolvedValue({ _sum: { participants: 0 } }),
           create: vi.fn().mockResolvedValue(txBooking),
         },
+        user: {
+          update: vi.fn().mockResolvedValue({ id: "user-1" }),
+        },
       });
     });
 
@@ -118,6 +124,9 @@ describe("POST /api/bookings", () => {
             findFirst: vi.fn().mockResolvedValue({ id: "existing" }),
             aggregate: vi.fn(),
             create: vi.fn(),
+          },
+          user: {
+            update: vi.fn(),
           },
         });
       } catch (e) {
@@ -144,6 +153,9 @@ describe("POST /api/bookings", () => {
             findFirst: vi.fn().mockResolvedValue(null),
             aggregate: vi.fn().mockResolvedValue({ _sum: { participants: 2 } }),
             create: vi.fn(),
+          },
+          user: {
+            update: vi.fn(),
           },
         });
       } catch (e) {
@@ -180,6 +192,9 @@ describe("POST /api/bookings", () => {
           findFirst: vi.fn().mockResolvedValue(null),
           aggregate: vi.fn(),
           create: vi.fn().mockResolvedValue(txBooking),
+        },
+        user: {
+          update: vi.fn().mockResolvedValue({ id: "user-1" }),
         },
       });
     });
