@@ -10,7 +10,7 @@ Live at https://surf-nature-murcia.vercel.app
 
 - One branch per feature/fix/docs.
 - Branch prefixes: `feat/`, `fix/`, `docs/`.
-- Descriptive commits (English).
+- All commits must be in **English** (both message and description).
 - Merge via `--no-ff` (squash prohibited).
 - **Never commit directly to `main`** — not even documentation. Everything goes through a branch + Pull Request.
 - After merging to `main`, Vercel auto-deploys.
