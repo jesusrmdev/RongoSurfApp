@@ -8,6 +8,7 @@ Live at https://surf-nature-murcia.vercel.app
 - Cada nueva funcionalidad o fix se desarrolla en una rama independiente desde `main`
 - Nombre de rama: `feat/descripcion-breve` o `fix/descripcion-breve`
 - Se realizan los commits necesarios en esa rama con mensajes descriptivos en español
+- Los commits deben preservar el historial completo (usar `git merge --no-ff` al mergear, sin squash)
 - Una vez implementado y verificado (build + tests pasan), se abre un Pull Request a `main`
 - Tras el merge a `main`, Vercel despliega automáticamente
 - No se commitea directamente a `main` excepto para documentación o cambios urgentes
