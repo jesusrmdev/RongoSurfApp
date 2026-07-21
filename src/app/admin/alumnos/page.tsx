@@ -3,7 +3,7 @@ import { requireAdmin } from "@/lib/dal";
 
 export const dynamic = "force-dynamic";
 
-type UserWithCount = {
+type UserWithBookings = {
   id: string;
   name: string;
   apellido1: string;
@@ -14,11 +14,11 @@ type UserWithCount = {
   height: number;
   wetsuitSize: string;
   role: string;
+  totalBookings: number;
   createdAt: Date;
-  _count: { bookings: number };
 };
 
-async function getUsers(): Promise<UserWithCount[]> {
+async function getUsers(): Promise<UserWithBookings[]> {
   return prisma.user.findMany({
     select: {
       id: true,
@@ -31,8 +31,8 @@ async function getUsers(): Promise<UserWithCount[]> {
       height: true,
       wetsuitSize: true,
       role: true,
+      totalBookings: true,
       createdAt: true,
-      _count: { select: { bookings: true } },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -89,7 +89,7 @@ export default async function AdminAlumnosPage() {
                 <td className="py-3 pr-4 text-muted">{u.wetsuitSize}</td>
                 <td className="py-3 pr-4">
                   <span className="text-xs bg-ocean/10 text-ocean px-2 py-0.5 rounded-full font-medium">
-                    {u._count.bookings}
+                    {u.totalBookings}
                   </span>
                 </td>
                 <td className="py-3 text-muted text-xs whitespace-nowrap">
@@ -126,7 +126,7 @@ export default async function AdminAlumnosPage() {
               </p>
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-xs bg-ocean/10 text-ocean px-2 py-0.5 rounded-full font-medium">
-                  {u._count.bookings} reserva{u._count.bookings !== 1 ? "s" : ""}
+                  {u.totalBookings} reserva{u.totalBookings !== 1 ? "s" : ""}
                 </span>
                 <span className="text-xs text-muted">
                   Desde {formatDate(u.createdAt)}

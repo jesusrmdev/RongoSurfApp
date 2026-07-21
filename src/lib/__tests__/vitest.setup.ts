@@ -6,6 +6,9 @@ type TxClient = {
     aggregate: ReturnType<typeof vi.fn>;
     create: ReturnType<typeof vi.fn>;
   };
+  user: {
+    update: ReturnType<typeof vi.fn>;
+  };
 };
 
 const mockTx: TxClient = {
@@ -13,6 +16,9 @@ const mockTx: TxClient = {
     findFirst: vi.fn(),
     aggregate: vi.fn(),
     create: vi.fn(),
+  },
+  user: {
+    update: vi.fn(),
   },
 };
 
