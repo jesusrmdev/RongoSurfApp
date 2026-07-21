@@ -12,7 +12,8 @@ Live at https://surf-nature-murcia.vercel.app
 - Branch prefixes: `feat/`, `fix/`, `docs/`.
 - All commits must be in **English** (both message and description).
 - Merge via `--no-ff` (squash prohibited).
-- **Never commit directly to `main`** — not even documentation. Everything goes through a branch + Pull Request.
+- **Never commit directly to `main`** — not even documentation or database scripts. Everything goes through a branch + Pull Request.
+- **Database operations** (manual updates, deletes, backfills) must also go through a branch: create a migration or script file, commit it, PR, merge, then run against production.
 - After merging to `main`, Vercel auto-deploys.
 
 ---
