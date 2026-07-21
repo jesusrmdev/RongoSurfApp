@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.0] - 2026-07-21
+
+### Added
+- **Workflow y documentación del proyecto endurecidos:** Nuevas reglas permanentes en `AGENTS.md` (git flow estricto, política de migraciones, dependencias, arquitectura por capas, documentación viva, reporte de cierre obligatorio, principios generales)
+
 ## [1.1.0] - 2026-06-22
 
 ### Fixed
